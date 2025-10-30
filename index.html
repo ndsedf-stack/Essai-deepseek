@@ -419,12 +419,6 @@
       color: var(--color-accent-green);
     }
     
-    .stat-chip.intensity {
-      background: rgba(255, 159, 10, 0.15);
-      border-color: rgba(255, 159, 10, 0.3);
-      color: #FF9F0A;
-    }
-    
     /* Graphiques améliorés */
     .chart-card {
       background: rgba(28, 28, 30, 0.7);
@@ -643,64 +637,6 @@
       }
     }
     
-    /* Timer amélioré */
-    .timer-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      background: rgba(28, 28, 30, 0.7);
-      backdrop-filter: blur(40px);
-      border-radius: 20px;
-      border: var(--glass-border);
-      margin: 20px 0;
-    }
-    
-    .timer-display {
-      font-size: 64px;
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-green));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      margin-bottom: 20px;
-      text-shadow: 0 0 20px rgba(10, 132, 255, 0.5);
-    }
-    
-    .timer-controls {
-      display: flex;
-      gap: 12px;
-      width: 100%;
-    }
-    
-    .timer-btn {
-      flex: 1;
-      padding: 16px;
-      border-radius: 14px;
-      font-weight: 700;
-      font-size: 16px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .timer-start {
-      background: linear-gradient(135deg, var(--color-accent-green), #28B446);
-      color: white;
-      box-shadow: 0 4px 16px rgba(48, 209, 88, 0.4);
-    }
-    
-    .timer-pause {
-      background: rgba(118, 118, 128, 0.24);
-      color: var(--color-text-primary);
-    }
-    
-    .timer-reset {
-      background: rgba(255, 69, 58, 0.2);
-      color: #FF453A;
-    }
-    
     /* Mode entraînement amélioré */
     .workout-mode {
       position: fixed;
@@ -861,10 +797,6 @@
         padding: 24px;
         border-radius: 24px;
       }
-      
-      .timer-display {
-        font-size: 48px;
-      }
     }
   </style>
 </head>
@@ -917,11 +849,11 @@
       <div class="card fade-in">
         <div class="control-group">
           <label class="control-label">📅 Semaine</label>
-          <select id="weekSelect" onchange="app.updateDisplay()"></select>
+          <select id="weekSelect"></select>
         </div>
         <div class="control-group">
           <label class="control-label">🗓️ Jour d'entraînement</label>
-          <select id="daySelect" onchange="app.updateDisplay()">
+          <select id="daySelect">
             <option value="dimanche">Dimanche - Dos + Jambes + Bras</option>
             <option value="mardi">Mardi - Pecs + Épaules + Triceps</option>
             <option value="vendredi">Vendredi - Dos + Jambes + Bras</option>
@@ -1044,930 +976,331 @@
     <div class="timer-container">
       <div class="timer-display" id="workoutTimer">00:00</div>
       <div class="timer-controls">
-        <button class="timer-btn timer-start" id="timerStart" onclick="app.startTimer()">Démarrer</button>
-        <button class="timer-btn timer-pause" id="timerPause" onclick="app.pauseTimer()" disabled>Pause</button>
-        <button class="timer-btn timer-reset" onclick="app.resetTimer()">Reset</button>
+        <button class="timer-btn timer-start" id="timerStart">Démarrer</button>
+        <button class="timer-btn timer-pause" id="timerPause" disabled>Pause</button>
+        <button class="timer-btn timer-reset">Reset</button>
       </div>
     </div>
     
     <div class="workout-controls">
-      <button class="control-btn control-complete" onclick="app.completeSet()">Série Terminée</button>
-      <button class="control-btn control-skip" onclick="app.skipExercise()">Passer l'exercice</button>
+      <button class="control-btn control-complete">Série Terminée</button>
+      <button class="control-btn control-skip">Passer l'exercice</button>
     </div>
   </div>
 
   <script>
-    class HybridMaster51 {
-      constructor() {
-        this.currentWeek = 1;
-        this.currentDay = 'dimanche';
-        this.workoutHistory = this.loadHistory();
-        this.charts = {};
-        this.timer = null;
-        this.timerSeconds = 0;
-        this.timerRunning = false;
-        this.currentExerciseIndex = 0;
-        this.currentSet = 1;
-        this.init();
-      }
+    // Version simplifiée et robuste de l'application
+    document.addEventListener('DOMContentLoaded', function() {
+      const app = {
+        currentWeek: 1,
+        currentDay: 'dimanche',
+        workoutHistory: [],
+        charts: {},
+        timer: null,
+        timerSeconds: 0,
+        timerRunning: false,
+        currentExerciseIndex: 0,
+        currentSet: 1,
 
-      init() {
-        this.setupProgram();
-        this.populateWeekSelect();
-        this.setupEventListeners();
-        this.updateDisplay();
-        
-        // Ajouter des animations d'apparition
-        setTimeout(() => {
-          document.querySelectorAll('.fade-in').forEach(el => {
-            el.style.animationDelay = '0s';
-          });
-        }, 100);
-      }
-
-      setupEventListeners() {
-        // Onglets header
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            const tab = e.target.dataset.tab;
-            this.switchTab(tab);
-          });
-        });
-
-        // Nav inférieure
-        document.querySelectorAll('.nav-item[data-nav]').forEach(item => {
-          item.addEventListener('click', (e) => {
-            const nav = e.currentTarget.dataset.nav;
-            this.switchTab(nav);
-          });
-        });
-      }
-
-      setupProgram() {
-        this.program = {
+        program: {
           dimanche: {
             title: "Dimanche - Dos + Jambes Lourdes + Bras",
             exercises: [
-              { 
-                name: "Trap Bar Deadlift", 
-                sets: 5, 
-                reps: "6-8", 
-                rest: 120, 
-                startWeight: 75, 
-                increment: 5, 
-                frequency: 3, 
-                targetWeight: 120,
-                intensity: "Progression Linéaire",
-                technique: "Augmentation de charge toutes les 3 semaines"
-              },
-              { 
-                name: "Goblet Squat", 
-                sets: 4, 
-                reps: "10", 
-                rest: 75, 
-                startWeight: 25, 
-                increment: 2.5, 
-                frequency: 2, 
-                targetWeight: 57.5,
-                intensity: "Progression Linéaire",
-                technique: "Augmentation de charge toutes les 2 semaines"
-              },
-              { 
-                name: "Leg Press", 
-                sets: 4, 
-                reps: "10", 
-                rest: 75, 
-                startWeight: 110, 
-                increment: 10, 
-                frequency: 2, 
-                targetWeight: 240,
-                intensity: "Progression Linéaire",
-                technique: "Augmentation de charge toutes les 2 semaines"
-              },
-              { 
-                name: "Lat Pulldown (prise large)", 
-                sets: 4, 
-                reps: "10", 
-                rest: 90, 
-                startWeight: 60, 
-                increment: 2.5, 
-                frequency: 2, 
-                targetWeight: 92.5,
-                intensity: "Progression Linéaire",
-                technique: "Augmentation de charge toutes les 2 semaines"
-              },
-              { 
-                name: "Landmine Press", 
-                sets: 4, 
-                reps: "10", 
-                rest: 90, 
-                startWeight: 35, 
-                increment: 2.5, 
-                frequency: 2, 
-                targetWeight: 67.5,
-                intensity: "Progression Linéaire",
-                technique: "Augmentation de charge toutes les 2 semaines"
-              },
-              { 
-                name: "Rowing Machine (prise large)", 
-                sets: 4, 
-                reps: "10", 
-                rest: 75, 
-                startWeight: 50, 
-                increment: 2.5, 
-                frequency: 2, 
-                targetWeight: 82.5,
-                intensity: "Progression Linéaire",
-                technique: "Augmentation de charge toutes les 2 semaines"
-              },
-              { 
-                name: "Incline Curl", 
-                sets: 4, 
-                reps: "12", 
-                rest: 75, 
-                startWeight: 12, 
-                increment: 2.5, 
-                frequency: 3, 
-                targetWeight: 34.5,
-                intensity: "Progression Linéaire",
-                technique: "Augmentation de charge toutes les 3 semaines"
-              },
-              { 
-                name: "Cable Pushdown", 
-                sets: 3, 
-                reps: "12", 
-                rest: 75, 
-                startWeight: 20, 
-                increment: 2.5, 
-                frequency: 3, 
-                targetWeight: 42.5,
-                intensity: "Progression Linéaire",
-                technique: "Augmentation de charge toutes les 3 semaines"
-              }
+              { name: "Trap Bar Deadlift", sets: 5, reps: "6-8", rest: 120, startWeight: 75, increment: 5, frequency: 3, targetWeight: 120 },
+              { name: "Goblet Squat", sets: 4, reps: "10", rest: 75, startWeight: 25, increment: 2.5, frequency: 2, targetWeight: 57.5 },
+              { name: "Leg Press", sets: 4, reps: "10", rest: 75, startWeight: 110, increment: 10, frequency: 2, targetWeight: 240 },
+              { name: "Lat Pulldown (prise large)", sets: 4, reps: "10", rest: 90, startWeight: 60, increment: 2.5, frequency: 2, targetWeight: 92.5 },
+              { name: "Landmine Press", sets: 4, reps: "10", rest: 90, startWeight: 35, increment: 2.5, frequency: 2, targetWeight: 67.5 },
+              { name: "Rowing Machine (prise large)", sets: 4, reps: "10", rest: 75, startWeight: 50, increment: 2.5, frequency: 2, targetWeight: 82.5 },
+              { name: "Incline Curl", sets: 4, reps: "12", rest: 75, startWeight: 12, increment: 2.5, frequency: 3, targetWeight: 34.5 },
+              { name: "Cable Pushdown", sets: 3, reps: "12", rest: 75, startWeight: 20, increment: 2.5, frequency: 3, targetWeight: 42.5 }
             ]
           },
           mardi: {
             title: "Mardi - Pecs + Épaules + Triceps",
             exercises: [
-              { 
-                name: "Dumbbell Press", 
-                sets: 5, 
-                reps: "10", 
-                rest: 105, 
-                startWeight: 22, 
-                increment: 2.5, 
-                frequency: 3, 
-                targetWeight: 45,
-                intensity: "Progression Linéaire",
-                technique: "Augmentation de charge toutes les 3 semaines"
-              },
-              { 
-                name: "Cable Fly (poulies moyennes)", 
-                sets: 4, 
-                reps: "12", 
-                rest: 60, 
-                startWeight: 10, 
-                increment: 2.5, 
-                frequency: 3, 
-                targetWeight: 32.5,
-                intensity: "Progression Linéaire",
-                technique: "Augmentation de charge toutes les 3 semaines"
-              },
-              { 
-                name: "Leg Press leger", 
-                sets: 3, 
-                reps: "15", 
-                rest: 60, 
-                startWeight: 80, 
-                increment: 10, 
-                frequency: 3, 
-                targetWeight: 170,
-                intensity: "Progression Linéaire",
-                technique: "Augmentation de charge toutes les 3 semaines"
-              },
-              { 
-                name: "Extension Triceps Corde", 
-                sets: 5, 
-                reps: "12", 
-                rest: 75, 
-                startWeight: 20, 
-                increment: 2.5, 
-                frequency: 3, 
-                targetWeight: 42.5,
-                intensity: "Progression Linéaire",
-                technique: "Augmentation de charge toutes les 3 semaines"
-              },
-              { 
-                name: "Lateral Raises", 
-                sets: 3, 
-                reps: "15", 
-                rest: 60, 
-                startWeight: 8, 
-                increment: 2.5, 
-                frequency: 4, 
-                targetWeight: 23,
-                intensity: "Progression Linéaire",
-                technique: "Augmentation de charge toutes les 4 semaines"
-              },
-              { 
-                name: "Wrist Curl", 
-                sets: 3, 
-                reps: "20", 
-                rest: 45, 
-                startWeight: 30, 
-                increment: 2.5, 
-                frequency: 4, 
-                targetWeight: 47.5,
-                intensity: "Progression Linéaire",
-                technique: "Augmentation de charge toutes les 4 semaines"
-              }
+              { name: "Dumbbell Press", sets: 5, reps: "10", rest: 105, startWeight: 22, increment: 2.5, frequency: 3, targetWeight: 45 },
+              { name: "Cable Fly (poulies moyennes)", sets: 4, reps: "12", rest: 60, startWeight: 10, increment: 2.5, frequency: 3, targetWeight: 32.5 },
+              { name: "Leg Press leger", sets: 3, reps: "15", rest: 60, startWeight: 80, increment: 10, frequency: 3, targetWeight: 170 },
+              { name: "Extension Triceps Corde", sets: 5, reps: "12", rest: 75, startWeight: 20, increment: 2.5, frequency: 3, targetWeight: 42.5 },
+              { name: "Lateral Raises", sets: 3, reps: "15", rest: 60, startWeight: 8, increment: 2.5, frequency: 4, targetWeight: 23 },
+              { name: "Wrist Curl", sets: 3, reps: "20", rest: 45, startWeight: 30, increment: 2.5, frequency: 4, targetWeight: 47.5 }
             ]
           },
           maison: {
             title: "Séance Maison (2x/semaine - Mardi & Jeudi soir)",
             exercises: [
-              { 
-                name: "Hammer Curl", 
-                sets: 3, 
-                reps: "12", 
-                rest: 60, 
-                startWeight: 12, 
-                increment: 2.5, 
-                frequency: 3, 
-                targetWeight: 34.5,
-                intensity: "Progression Linéaire",
-                technique: "Augmentation de charge toutes les 3 semaines"
-              }
+              { name: "Hammer Curl", sets: 3, reps: "12", rest: 60, startWeight: 12, increment: 2.5, frequency: 3, targetWeight: 34.5 }
             ]
           }
-        };
+        },
 
-        this.muscles = {
-          "Ischios": 18,
-          "Fessiers": 16,
-          "Dos": 22,
-          "Quadriceps": 20,
-          "Épaules": 15,
-          "Triceps": 14,
-          "Biceps": 18,
-          "Pectoraux": 18,
-          "Avant-bras": 6,
-          "Trapèzes": 10,
-          "Abdominaux": 8
-        };
-      }
+        init: function() {
+          this.setupEventListeners();
+          this.populateWeekSelect();
+          this.updateDisplay();
+        },
 
-      loadHistory() {
-        const saved = localStorage.getItem('hybrid_history');
-        if (saved) return JSON.parse(saved);
-        
-        // Historique simulé
-        const simulated = [];
-        const now = new Date();
-        for (let i = 30; i >= 0; i--) {
-          const date = new Date(now);
-          date.setDate(date.getDate() - i);
-          if ([0, 2, 5].includes(date.getDay())) {
-            simulated.push({
-              date: date.toISOString(),
-              week: Math.max(1, Math.ceil((30 - i) / 7)),
-              day: ['dimanche', 'mardi', 'vendredi'][Math.floor(Math.random() * 3)],
-              duration: 60 + Math.floor(Math.random() * 20),
-              completedSets: 28 + Math.floor(Math.random() * 7),
-              totalSets: 33,
-              volume: 5000 + Math.floor(Math.random() * 3000)
+        setupEventListeners: function() {
+          // Onglets header
+          document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              const tab = e.target.dataset.tab;
+              this.switchTab(tab);
             });
+          });
+
+          // Nav inférieure
+          document.querySelectorAll('.nav-item[data-nav]').forEach(item => {
+            item.addEventListener('click', (e) => {
+              const nav = e.currentTarget.dataset.nav;
+              this.switchTab(nav);
+            });
+          });
+
+          // Sélecteurs
+          document.getElementById('weekSelect').addEventListener('change', () => this.updateDisplay());
+          document.getElementById('daySelect').addEventListener('change', () => this.updateDisplay());
+
+          // Timer controls
+          document.getElementById('timerStart').addEventListener('click', () => this.startTimer());
+          document.getElementById('timerPause').addEventListener('click', () => this.pauseTimer());
+          document.querySelector('.timer-reset').addEventListener('click', () => this.resetTimer());
+
+          // Workout controls
+          document.querySelector('.control-complete').addEventListener('click', () => this.completeSet());
+          document.querySelector('.control-skip').addEventListener('click', () => this.skipExercise());
+        },
+
+        populateWeekSelect: function() {
+          const select = document.getElementById('weekSelect');
+          for(let i = 1; i <= 26; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = `Semaine ${i}`;
+            select.appendChild(option);
           }
-        }
-        this.saveHistory(simulated);
-        return simulated;
-      }
+        },
 
-      saveHistory(history) {
-        localStorage.setItem('hybrid_history', JSON.stringify(history));
-      }
+        calculateWeight: function(exercise, week) {
+          const { startWeight, increment, frequency } = exercise;
+          const progressions = Math.floor(week / frequency);
+          return Math.round((startWeight + (increment * progressions)) * 10) / 10;
+        },
 
-      populateWeekSelect() {
-        const select = document.getElementById('weekSelect');
-        for(let i = 1; i <= 26; i++) {
-          const option = document.createElement('option');
-          option.value = i;
-          option.textContent = `Semaine ${i}`;
-          select.appendChild(option);
-        }
-      }
+        switchTab: function(tabName) {
+          // Cacher tous les contenus
+          document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+          document.getElementById(`tab-${tabName}`).classList.remove('hidden');
 
-      calculateWeight(exercise, week) {
-        const { startWeight, increment, frequency } = exercise;
-        const progressions = Math.floor(week / frequency);
-        return Math.round((startWeight + (increment * progressions)) * 10) / 10;
-      }
+          // Mettre à jour les boutons header
+          document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tab === tabName);
+          });
 
-      getProgressionInfo(exercise, week) {
-        const currentWeight = this.calculateWeight(exercise, week);
-        const nextIncreaseWeek = Math.ceil(week / exercise.frequency) * exercise.frequency + 1;
-        const weeksUntilIncrease = nextIncreaseWeek - week;
-        
-        return {
-          currentWeight,
-          nextIncreaseWeek,
-          weeksUntilIncrease,
-          technique: exercise.technique
-        };
-      }
+          // Mettre à jour nav inférieure
+          document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+          });
+          const activeNavItem = document.querySelector(`.nav-item[data-nav="${tabName}"]`);
+          if (activeNavItem) activeNavItem.classList.add('active');
+        },
 
-      switchTab(tabName) {
-        // Cacher tous les contenus
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
-        document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-
-        // Mettre à jour les boutons header
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-          btn.classList.toggle('active', btn.dataset.tab === tabName);
-        });
-
-        // Mettre à jour nav inférieure
-        document.querySelectorAll('.nav-item').forEach(item => {
-          item.classList.remove('active');
-        });
-        const activeNavItem = document.querySelector(`.nav-item[data-nav="${tabName}"]`);
-        if (activeNavItem) activeNavItem.classList.add('active');
-
-        // Charger les graphiques si nécessaire
-        if (tabName === 'stats') {
-          setTimeout(() => {
-            this.renderVolumeChart();
-            this.renderCalendar();
-          }, 100);
-        } else if (tabName === 'muscles') {
-          setTimeout(() => {
-            this.renderRadarChart();
-            this.renderDonutChart();
-            this.renderMuscleVolume();
-          }, 100);
-        }
-      }
-
-      updateDisplay() {
-        const week = parseInt(document.getElementById('weekSelect').value) || 1;
-        const day = document.getElementById('daySelect').value;
-        this.currentWeek = week;
-        this.currentDay = day;
-        
-        this.renderSessionStats();
-        this.renderExercises();
-      }
-
-      renderSessionStats() {
-        const workout = this.program[this.currentDay];
-        if (!workout) return;
-
-        const totalSets = workout.exercises.reduce((sum, ex) => sum + ex.sets, 0);
-        const totalVolume = workout.exercises.reduce((sum, ex) => {
-          const weight = this.calculateWeight(ex, this.currentWeek);
-          const reps = typeof ex.reps === 'number' ? ex.reps : parseInt(ex.reps.split('-')[0]);
-          return sum + (weight * reps * ex.sets);
-        }, 0);
-        const duration = Math.ceil(totalSets * 2.5);
-
-        const html = `
-          <div class="stat-box">
-            <div class="stat-value">${totalSets}</div>
-            <div class="stat-label">Séries totales</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value">${Math.round(totalVolume/1000)}t</div>
-            <div class="stat-label">Volume total</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value">${duration}</div>
-            <div class="stat-label">Minutes</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value">${workout.exercises.length}</div>
-            <div class="stat-label">Exercices</div>
-          </div>
-        `;
-        document.getElementById('sessionStats').innerHTML = html;
-      }
-
-      renderExercises() {
-        const workout = this.program[this.currentDay];
-        if (!workout) return;
-
-        let html = '';
-        workout.exercises.forEach(ex => {
-          const weight = this.calculateWeight(ex, this.currentWeek);
-          const progression = this.getProgressionInfo(ex, this.currentWeek);
+        updateDisplay: function() {
+          const week = parseInt(document.getElementById('weekSelect').value) || 1;
+          const day = document.getElementById('daySelect').value;
+          this.currentWeek = week;
+          this.currentDay = day;
           
-          html += `
-            <div class="exercise-card">
-              <div class="exercise-header">
-                ${ex.name} 
-                <span class="intensity-badge">${ex.intensity}</span>
-              </div>
-              <div class="exercise-stats">
-                <span class="stat-chip">${ex.sets} séries</span>
-                <span class="stat-chip">${ex.reps} reps</span>
-                <span class="stat-chip weight">${weight}kg</span>
-                <span class="stat-chip">${ex.rest}s repos</span>
-                <span class="stat-chip intensity">${ex.frequency} sem.</span>
-              </div>
-              <div class="progression-info">
-                <div class="progression-text">
-                  ${progression.technique} • Prochaine augmentation: Semaine ${progression.nextIncreaseWeek} 
-                  (${progression.weeksUntilIncrease} semaine${progression.weeksUntilIncrease > 1 ? 's' : ''})
-                </div>
-              </div>
+          this.renderSessionStats();
+          this.renderExercises();
+        },
+
+        renderSessionStats: function() {
+          const workout = this.program[this.currentDay];
+          if (!workout) return;
+
+          const totalSets = workout.exercises.reduce((sum, ex) => sum + ex.sets, 0);
+          const totalVolume = workout.exercises.reduce((sum, ex) => {
+            const weight = this.calculateWeight(ex, this.currentWeek);
+            const reps = typeof ex.reps === 'number' ? ex.reps : parseInt(ex.reps.split('-')[0]);
+            return sum + (weight * reps * ex.sets);
+          }, 0);
+          const duration = Math.ceil(totalSets * 2.5);
+
+          const html = `
+            <div class="stat-box">
+              <div class="stat-value">${totalSets}</div>
+              <div class="stat-label">Séries totales</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-value">${Math.round(totalVolume/1000)}t</div>
+              <div class="stat-label">Volume total</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-value">${duration}</div>
+              <div class="stat-label">Minutes</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-value">${workout.exercises.length}</div>
+              <div class="stat-label">Exercices</div>
             </div>
           `;
-        });
-        document.getElementById('exerciseList').innerHTML = html;
-      }
+          document.getElementById('sessionStats').innerHTML = html;
+        },
 
-      startWorkout() {
-        document.getElementById('workoutMode').classList.remove('hidden');
-        this.currentExerciseIndex = 0;
-        this.currentSet = 1;
-        this.resetTimer();
-        this.updateWorkoutDisplay();
-      }
+        renderExercises: function() {
+          const workout = this.program[this.currentDay];
+          if (!workout) return;
 
-      exitWorkout() {
-        document.getElementById('workoutMode').classList.add('hidden');
-        this.resetTimer();
-      }
+          let html = '';
+          workout.exercises.forEach(ex => {
+            const weight = this.calculateWeight(ex, this.currentWeek);
+            html += `
+              <div class="exercise-card">
+                <div class="exercise-header">${ex.name}</div>
+                <div class="exercise-stats">
+                  <span class="stat-chip">${ex.sets} séries</span>
+                  <span class="stat-chip">${ex.reps} reps</span>
+                  <span class="stat-chip weight">${weight}kg</span>
+                  <span class="stat-chip">${ex.rest}s repos</span>
+                </div>
+              </div>
+            `;
+          });
+          document.getElementById('exerciseList').innerHTML = html;
+        },
 
-      updateWorkoutDisplay() {
-        const workout = this.program[this.currentDay];
-        if (!workout || this.currentExerciseIndex >= workout.exercises.length) {
-          this.exitWorkout();
-          return;
-        }
-
-        const exercise = workout.exercises[this.currentExerciseIndex];
-        const weight = this.calculateWeight(exercise, this.currentWeek);
-        const progression = this.getProgressionInfo(exercise, this.currentWeek);
-
-        document.getElementById('workoutExerciseName').textContent = exercise.name;
-        document.getElementById('workoutSets').textContent = `${this.currentSet}/${exercise.sets}`;
-        document.getElementById('workoutReps').textContent = exercise.reps;
-        document.getElementById('workoutWeight').textContent = `${weight}kg`;
-        document.getElementById('workoutRest').textContent = `${exercise.rest}s`;
-        
-        // Mettre à jour les informations de progression
-        document.getElementById('progressionText').textContent = 
-          `${progression.technique} • Prochaine augmentation dans ${progression.weeksUntilIncrease} semaine${progression.weeksUntilIncrease > 1 ? 's' : ''}`;
-      }
-
-      completeSet() {
-        const workout = this.program[this.currentDay];
-        if (!workout) return;
-
-        const exercise = workout.exercises[this.currentExerciseIndex];
-        
-        if (this.currentSet < exercise.sets) {
-          this.currentSet++;
+        startWorkout: function() {
+          document.getElementById('workoutMode').classList.remove('hidden');
+          this.currentExerciseIndex = 0;
+          this.currentSet = 1;
           this.resetTimer();
-          this.startTimer();
-        } else {
+          this.updateWorkoutDisplay();
+        },
+
+        exitWorkout: function() {
+          document.getElementById('workoutMode').classList.add('hidden');
+          this.resetTimer();
+        },
+
+        updateWorkoutDisplay: function() {
+          const workout = this.program[this.currentDay];
+          if (!workout || this.currentExerciseIndex >= workout.exercises.length) {
+            this.exitWorkout();
+            return;
+          }
+
+          const exercise = workout.exercises[this.currentExerciseIndex];
+          const weight = this.calculateWeight(exercise, this.currentWeek);
+
+          document.getElementById('workoutExerciseName').textContent = exercise.name;
+          document.getElementById('workoutSets').textContent = `${this.currentSet}/${exercise.sets}`;
+          document.getElementById('workoutReps').textContent = exercise.reps;
+          document.getElementById('workoutWeight').textContent = `${weight}kg`;
+          document.getElementById('workoutRest').textContent = `${exercise.rest}s`;
+        },
+
+        completeSet: function() {
+          const workout = this.program[this.currentDay];
+          if (!workout) return;
+
+          const exercise = workout.exercises[this.currentExerciseIndex];
+          
+          if (this.currentSet < exercise.sets) {
+            this.currentSet++;
+            this.resetTimer();
+            this.startTimer();
+          } else {
+            this.currentExerciseIndex++;
+            this.currentSet = 1;
+            
+            if (this.currentExerciseIndex >= workout.exercises.length) {
+              alert('Félicitations! Vous avez terminé votre séance!');
+              this.exitWorkout();
+              return;
+            }
+            
+            this.resetTimer();
+          }
+          
+          this.updateWorkoutDisplay();
+        },
+
+        skipExercise: function() {
           this.currentExerciseIndex++;
           this.currentSet = 1;
           
+          const workout = this.program[this.currentDay];
           if (this.currentExerciseIndex >= workout.exercises.length) {
-            alert('Félicitations! Vous avez terminé votre séance!');
+            alert('Séance terminée!');
             this.exitWorkout();
             return;
           }
           
           this.resetTimer();
-        }
-        
-        this.updateWorkoutDisplay();
-      }
+          this.updateWorkoutDisplay();
+        },
 
-      skipExercise() {
-        this.currentExerciseIndex++;
-        this.currentSet = 1;
-        
-        const workout = this.program[this.currentDay];
-        if (this.currentExerciseIndex >= workout.exercises.length) {
-          alert('Séance terminée!');
-          this.exitWorkout();
-          return;
-        }
-        
-        this.resetTimer();
-        this.updateWorkoutDisplay();
-      }
+        startTimer: function() {
+          if (this.timerRunning) return;
+          
+          this.timerRunning = true;
+          document.getElementById('timerStart').disabled = true;
+          document.getElementById('timerPause').disabled = false;
+          
+          this.timer = setInterval(() => {
+            this.timerSeconds++;
+            this.updateTimerDisplay();
+          }, 1000);
+        },
 
-      startTimer() {
-        if (this.timerRunning) return;
-        
-        this.timerRunning = true;
-        document.getElementById('timerStart').disabled = true;
-        document.getElementById('timerPause').disabled = false;
-        
-        this.timer = setInterval(() => {
-          this.timerSeconds++;
+        pauseTimer: function() {
+          if (!this.timerRunning) return;
+          
+          this.timerRunning = false;
+          document.getElementById('timerStart').disabled = false;
+          document.getElementById('timerPause').disabled = true;
+          
+          clearInterval(this.timer);
+        },
+
+        resetTimer: function() {
+          this.pauseTimer();
+          this.timerSeconds = 0;
           this.updateTimerDisplay();
-        }, 1000);
-      }
+        },
 
-      pauseTimer() {
-        if (!this.timerRunning) return;
-        
-        this.timerRunning = false;
-        document.getElementById('timerStart').disabled = false;
-        document.getElementById('timerPause').disabled = true;
-        
-        clearInterval(this.timer);
-      }
+        updateTimerDisplay: function() {
+          const minutes = Math.floor(this.timerSeconds / 60);
+          const seconds = this.timerSeconds % 60;
+          document.getElementById('workoutTimer').textContent = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        },
 
-      resetTimer() {
-        this.pauseTimer();
-        this.timerSeconds = 0;
-        this.updateTimerDisplay();
-      }
+        showHistory: function() {
+          alert('Fonctionnalité Historique - En cours de développement');
+        },
 
-      updateTimerDisplay() {
-        const minutes = Math.floor(this.timerSeconds / 60);
-        const seconds = this.timerSeconds % 60;
-        document.getElementById('workoutTimer').textContent = 
-          `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-      }
+        showProgression: function() {
+          this.switchTab('stats');
+        },
 
-      showIntensificationGuide() {
-        const html = `
-          <div class="modal-overlay" onclick="if(event.target === this) this.remove()">
-            <div class="modal-content">
-              <div class="modal-close"></div>
-              <div class="modal-header">🔥 Techniques d'Intensification</div>
-              <div style="max-height: 60vh; overflow-y: auto;">
-                <div style="background: rgba(118, 118, 128, 0.12); border-radius: 16px; padding: 16px; margin-bottom: 12px;">
-                  <div style="font-size: 17px; font-weight: 800; color: #FF9F0A; margin-bottom: 6px;">Progression Linéaire</div>
-                  <div style="font-size: 13px; color: var(--color-text-secondary);">
-                    Augmentation systématique des charges selon un calendrier prédéfini. Chaque exercice a sa propre fréquence d'augmentation (2, 3 ou 4 semaines).
-                  </div>
-                </div>
-                
-                <div style="background: rgba(118, 118, 128, 0.12); border-radius: 16px; padding: 16px; margin-bottom: 12px;">
-                  <div style="font-size: 17px; font-weight: 800; color: #30D158; margin-bottom: 6px;">Surcharge Progressive</div>
-                  <div style="font-size: 13px; color: var(--color-text-secondary);">
-                    Le programme suit le principe de surcharge progressive avec des augmentations de 2.5kg à 10kg selon les exercices.
-                  </div>
-                </div>
-                
-                <div style="background: rgba(118, 118, 128, 0.12); border-radius: 16px; padding: 16px; margin-bottom: 12px;">
-                  <div style="font-size: 17px; font-weight: 800; color: #0A84FF; margin-bottom: 6px;">Structuration par Fréquence</div>
-                  <div style="font-size: 13px; color: var(--color-text-secondary);">
-                    Les groupes musculaires sont travaillés 2 à 3 fois par semaine avec des volumes d'entraînement optimisés pour la croissance.
-                  </div>
-                </div>
-                
-                <div style="background: rgba(118, 118, 128, 0.12); border-radius: 16px; padding: 16px; margin-bottom: 12px;">
-                  <div style="font-size: 17px; font-weight: 800; color: #BF5AF2; margin-bottom: 6px;">Variation des Charges</div>
-                  <div style="font-size: 13px; color: var(--color-text-secondary);">
-                    Le programme alterne entre jours lourds et jours légers pour optimiser la récupération et la progression.
-                  </div>
-                </div>
-              </div>
-              <button class="btn" onclick="this.closest('.modal-overlay').remove()" style="margin-top: 16px;">
-                Fermer
-              </button>
-            </div>
-          </div>
-        `;
-        document.body.insertAdjacentHTML('beforeend', html);
-      }
+        showIntensificationGuide: function() {
+          alert('Guide des Techniques d\'Intensification - En cours de développement');
+        },
 
-      // Les autres méthodes (renderVolumeChart, renderCalendar, etc.) restent inchangées
-      renderVolumeChart() {
-        const ctx = document.getElementById('volumeChart');
-        if (!ctx) return;
-
-        const labels = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-        const data = [0, 7200, 0, 0, 8500, 0, 10200];
-        const target = 7200;
-
-        if (this.charts.volume) this.charts.volume.destroy();
-
-        this.charts.volume = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: labels,
-            datasets: [{
-              data: data,
-              backgroundColor: data.map((v, i) => {
-                if (v === 0) return 'rgba(118, 118, 128, 0.12)';
-                const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 280);
-                if (v >= target) {
-                  gradient.addColorStop(0, 'rgba(48, 209, 88, 0.9)');
-                  gradient.addColorStop(1, 'rgba(48, 209, 88, 0.3)');
-                } else {
-                  gradient.addColorStop(0, 'rgba(10, 132, 255, 0.9)');
-                  gradient.addColorStop(1, 'rgba(10, 132, 255, 0.3)');
-                }
-                return gradient;
-              }),
-              borderRadius: 10,
-              borderSkipped: false
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                backgroundColor: 'rgba(28, 28, 30, 0.95)',
-                padding: 12,
-                titleFont: { size: 14, weight: 'bold', family: '-apple-system' },
-                bodyFont: { size: 16, weight: 'bold', family: '-apple-system' },
-                displayColors: false,
-                callbacks: {
-                  label: (context) => context.parsed.y > 0 ? `${context.parsed.y.toLocaleString()} KG` : 'Repos'
-                }
-              }
-            },
-            scales: {
-              y: {
-                beginAtZero: true,
-                max: 12000,
-                ticks: {
-                  color: '#98989D',
-                  font: { size: 12, weight: '600' },
-                  callback: (value) => value >= 1000 ? `${(value/1000).toFixed(0)}K` : value
-                },
-                grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false }
-              },
-              x: {
-                ticks: { color: '#98989D', font: { size: 13, weight: '700' } },
-                grid: { display: false }
-              }
-            }
-          }
-        });
-      }
-
-      renderCalendar() {
-        const now = new Date();
-        const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-        const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-        const startDay = firstDay.getDay();
-
-        let html = '<div class="calendar-grid">';
-        
-        // En-têtes
-        ['D', 'L', 'M', 'M', 'J', 'V', 'S'].forEach(d => {
-          html += `<div style="text-align: center; font-size: 11px; font-weight: 700; color: var(--color-text-secondary); padding: 8px 0;">${d}</div>`;
-        });
-
-        // Jours vides
-        for (let i = 0; i < startDay; i++) {
-          html += '<div class="calendar-day" style="opacity: 0;"></div>';
+        showSettings: function() {
+          alert('Réglages - En cours de développement');
         }
+      };
 
-        // Jours du mois
-        for (let day = 1; day <= daysInMonth; day++) {
-          const date = new Date(now.getFullYear(), now.getMonth(), day);
-          const session = this.workoutHistory.find(s => {
-            const sDate = new Date(s.date);
-            return sDate.getDate() === day && sDate.getMonth() === now.getMonth() && sDate.getFullYear() === now.getFullYear();
-          });
+      // Initialisation
+      window.app = app;
+      app.init();
 
-          let className = 'calendar-day';
-          if (session) {
-            className += session.completedSets / session.totalSets >= 0.9 ? ' completed' : ' partial';
-          }
-
-          html += `<div class="${className}">${day}</div>`;
-        }
-
-        html += '</div>';
-        document.getElementById('calendarDisplay').innerHTML = html;
-      }
-
-      renderRadarChart() {
-        const ctx = document.getElementById('radarChart');
-        if (!ctx) return;
-
-        if (this.charts.radar) this.charts.radar.destroy();
-
-        const labels = Object.keys(this.muscles);
-        const data = Object.values(this.muscles);
-
-        this.charts.radar = new Chart(ctx, {
-          type: 'radar',
-          data: {
-            labels: labels,
-            datasets: [{
-              data: data,
-              backgroundColor: 'rgba(255, 140, 0, 0.3)',
-              borderColor: '#FF8C00',
-              borderWidth: 3,
-              pointBackgroundColor: '#FF8C00',
-              pointBorderColor: '#fff',
-              pointBorderWidth: 2,
-              pointRadius: 6
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-              r: {
-                beginAtZero: true,
-                max: 30,
-                ticks: {
-                  color: '#98989D',
-                  backdropColor: 'transparent',
-                  font: { size: 10, weight: '600' }
-                },
-                grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                pointLabels: {
-                  color: '#FFFFFF',
-                  font: { size: 11, weight: '700' }
-                }
-              }
-            }
-          }
-        });
-      }
-
-      renderDonutChart() {
-        const ctx = document.getElementById('donutChart');
-        if (!ctx) return;
-
-        if (this.charts.donut) this.charts.donut.destroy();
-
-        const labels = Object.keys(this.muscles);
-        const data = Object.values(this.muscles);
-        const colors = ['#FF8C00', '#FFA500', '#FFB733', '#FFC966', '#FFDB99', '#FF6B35', '#FF8353', '#FF9B71', '#FFB38F', '#FFCBAD', '#FF4500'];
-
-        this.charts.donut = new Chart(ctx, {
-          type: 'doughnut',
-          data: {
-            labels: labels,
-            datasets: [{
-              data: data,
-              backgroundColor: colors,
-              borderColor: '#000000',
-              borderWidth: 2
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-              legend: {
-                position: 'bottom',
-                labels: {
-                  color: '#FFFFFF',
-                  font: { size: 11, weight: '600' },
-                  padding: 10,
-                  usePointStyle: true
-                }
-              }
-            }
-          }
-        });
-      }
-
-      renderMuscleVolume() {
-        let html = '<div style="display: flex; flex-direction: column; gap: 10px;">';
-        
-        Object.entries(this.muscles).forEach(([muscle, volume]) => {
-          const optimalMin = 10;
-          const optimalMax = 20;
-          const isOptimal = volume >= optimalMin && volume <= optimalMax;
-          const percentage = Math.min(100, (volume / optimalMax) * 100);
-
-          html += `
-            <div style="background: rgba(118, 118, 128, 0.12); border-radius: 14px; padding: 14px; border-left: 4px solid ${isOptimal ? '#30D158' : '#0A84FF'};">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <div style="font-weight: 700; font-size: 15px; color: ${isOptimal ? '#30D158' : '#0A84FF'};">
-                  ${isOptimal ? '✅' : '⚠️'} ${muscle}
-                </div>
-                <div style="font-weight: 800; font-size: 20px; color: ${isOptimal ? '#30D158' : '#0A84FF'};">
-                  ${volume}
-                </div>
-              </div>
-              <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px;">
-                Optimal: ${optimalMin}-${optimalMax} séries • ${isOptimal ? 'PARFAIT' : 'OK'}
-              </div>
-              <div style="background: rgba(255, 255, 255, 0.05); height: 5px; border-radius: 3px; overflow: hidden;">
-                <div style="background: ${isOptimal ? '#30D158' : '#0A84FF'}; height: 100%; width: ${percentage}%; transition: width 0.5s ease;"></div>
-              </div>
-            </div>
-          `;
-        });
-
-        html += '</div>';
-        document.getElementById('muscleVolumeList').innerHTML = html;
-      }
-
-      showHistory() {
-        const html = `
-          <div class="modal-overlay" onclick="if(event.target === this) this.remove()">
-            <div class="modal-content">
-              <div class="modal-close"></div>
-              <div class="modal-header">📊 Historique</div>
-              <div style="max-height: 60vh; overflow-y: auto;">
-                ${this.workoutHistory.slice().reverse().slice(0, 10).map(s => {
-                  const date = new Date(s.date).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' });
-                  const completion = Math.round((s.completedSets / s.totalSets) * 100);
-                  return `
-                    <div style="background: rgba(118, 118, 128, 0.12); border-radius: 16px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #30D158;">
-                      <div style="font-size: 17px; font-weight: 800; color: #30D158; margin-bottom: 6px;">${date}</div>
-                      <div style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px;">S${s.week} • ${s.day}</div>
-                      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
-                        <div>
-                          <div style="font-size: 22px; font-weight: 800; color: #0A84FF;">${s.duration}min</div>
-                          <div style="font-size: 11px; color: var(--color-text-secondary);">Durée</div>
-                        </div>
-                        <div>
-                          <div style="font-size: 22px; font-weight: 800; color: #30D158;">${s.completedSets}/${s.totalSets}</div>
-                          <div style="font-size: 11px; color: var(--color-text-secondary);">Séries</div>
-                        </div>
-                        <div>
-                          <div style="font-size: 22px; font-weight: 800; color: ${completion === 100 ? '#30D158' : '#0A84FF'};">${completion}%</div>
-                          <div style="font-size: 11px; color: var(--color-text-secondary);">Complet</div>
-                        </div>
-                      </div>
-                    </div>
-                  `;
-                }).join('')}
-              </div>
-              <button class="btn" onclick="this.closest('.modal-overlay').remove()" style="margin-top: 16px;">
-                Fermer
-              </button>
-            </div>
-          </div>
-        `;
-        document.body.insertAdjacentHTML('beforeend', html);
-      }
-
-      showProgression() {
-        this.switchTab('stats');
-      }
-
-      exportData() {
-        if (confirm('💾 Exporter les données?\n\nTélécharger votre historique en JSON?')) {
-          const dataStr = JSON.stringify(this.workoutHistory, null, 2);
-          const blob = new Blob([dataStr], { type: 'application/json' });
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = `hybrid_master_51_${new Date().toISOString().split('T')[0]}.json`;
-          link.click();
-          URL.revokeObjectURL(url);
-        }
-      }
-
-      showSettings() {
-        const html = `
-          <div class="modal-overlay" onclick="if(event.target === this) this.remove()">
-            <div class="modal-content">
-              <div class="modal-close"></div>
-              <div class="modal-header">⚙️ Réglages</div>
-              <div style="display: flex; flex-direction: column; gap: 12px; margin: 20px 0;">
-                <button class="btn-secondary" style="padding: 16px; border-radius: 14px;" onclick="app.resetHistory(); this.closest('.modal-overlay').remove();">
-                  🗑️ Réinitialiser l'historique
-                </button>
-                <button class="btn-secondary" style="padding: 16px; border-radius: 14px;" onclick="app.exportData();">
-                  💾 Exporter les données
-                </button>
-                <button class="btn-secondary" style="padding: 16px; border-radius: 14px;" onclick="alert('ℹ️ HYBRID MASTER 51\\n\\nVersion: Ultimate Pro 10.0\\n\\n© 2025');">
-                  ℹ️ À propos
-                </button>
-              </div>
-              <button class="btn" onclick="this.closest('.modal-overlay').remove()">
-                Fermer
-              </button>
-            </div>
-          </div>
-        `;
-        document.body.insertAdjacentHTML('beforeend', html);
-      }
-
-      resetHistory() {
-        if (confirm('⚠️ Réinitialiser l\'historique?\n\nCette action est irréversible.')) {
-          localStorage.removeItem('hybrid_history');
-          this.workoutHistory = [];
-          alert('✅ Historique réinitialisé!');
-          this.renderCalendar();
-        }
-      }
-    }
-
-    // Initialisation
-    const app = new HybridMaster51();
-    window.app = app;
-
-    console.log('%c🏆 HYBRID MASTER 51 - ULTIMATE PRO', 'color: #30D158; font-size: 20px; font-weight: bold;');
-    console.log('%c✨ Techniques d\'intensification mises en avant', 'color: #FF9F0A; font-size: 14px;');
+      console.log('🏆 HYBRID MASTER 51 - Application chargée avec succès');
+    });
   </script>
 </body>
 </html>
