@@ -29,7 +29,7 @@
     }
     
     body {
-      background: var(--color-background);
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
       color: var(--color-text-primary);
       font-family: -apple-system, 'SF Pro Display', sans-serif;
       line-height: 1.5;
@@ -37,26 +37,6 @@
       position: relative;
       overflow-x: hidden;
       padding-bottom: 90px;
-    }
-    
-    body::before {
-      content: '';
-      position: fixed;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: 
-        radial-gradient(circle at 30% 40%, rgba(10, 132, 255, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 70% 60%, rgba(48, 209, 88, 0.12) 0%, transparent 40%);
-      animation: glowMove 20s ease-in-out infinite;
-      pointer-events: none;
-      z-index: 0;
-    }
-    
-    @keyframes glowMove {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(-3%, -3%); }
     }
     
     .container {
@@ -439,6 +419,12 @@
       color: var(--color-accent-green);
     }
     
+    .stat-chip.intensity {
+      background: rgba(255, 159, 10, 0.15);
+      border-color: rgba(255, 159, 10, 0.3);
+      color: #FF9F0A;
+    }
+    
     /* Graphiques améliorés */
     .chart-card {
       background: rgba(28, 28, 30, 0.7);
@@ -500,64 +486,6 @@
       background: linear-gradient(135deg, var(--color-accent-blue), #0077ED);
       color: white;
       box-shadow: 0 4px 12px rgba(10, 132, 255, 0.4);
-    }
-    
-    /* Modal iOS 18 amélioré */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(20px);
-      z-index: 9999;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      animation: fadeIn 0.3s ease;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    
-    .modal-content {
-      background: rgba(44, 44, 46, 0.95);
-      backdrop-filter: blur(50px) saturate(200%);
-      border-radius: 28px 28px 0 0;
-      padding: 28px;
-      width: 100%;
-      max-height: 85vh;
-      overflow-y: auto;
-      animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      border: var(--glass-border);
-    }
-    
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-    
-    .modal-header {
-      font-size: 26px;
-      font-weight: 900;
-      color: var(--color-text-primary);
-      margin-bottom: 24px;
-      text-align: center;
-      background: linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-green));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    
-    .modal-close {
-      width: 50px;
-      height: 6px;
-      background: rgba(118, 118, 128, 0.3);
-      border-radius: 3px;
-      margin: 0 auto 24px;
     }
     
     /* Navigation inférieure iOS 18 améliorée */
@@ -780,7 +708,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: var(--color-background);
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
       z-index: 10000;
       display: flex;
       flex-direction: column;
@@ -886,6 +814,34 @@
       color: var(--color-text-primary);
     }
     
+    /* Indicateurs d'intensification */
+    .intensity-badge {
+      background: rgba(255, 159, 10, 0.15);
+      border: 1px solid rgba(255, 159, 10, 0.3);
+      color: #FF9F0A;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-left: 8px;
+    }
+    
+    .progression-info {
+      background: rgba(10, 132, 255, 0.1);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 12px;
+      border-left: 3px solid var(--color-accent-blue);
+    }
+    
+    .progression-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-accent-cyan);
+    }
+    
     /* Responsive */
     @media (max-width: 768px) {
       .quick-actions {
@@ -918,10 +874,10 @@
     <div class="header fade-in">
       <div class="header-top">
         <div class="app-logo">
-          <div class="logo-icon">🏆</div>
+          <div class="logo-icon">💪</div>
           <div class="app-title">
             <h1>HYBRID MASTER 51</h1>
-            <div class="app-subtitle">Programme Pro • 26 Semaines</div>
+            <div class="app-subtitle">Programme Pro • 26 Semaines • Techniques d'Intensification</div>
           </div>
         </div>
         <div class="pro-badge">PRO</div>
@@ -940,16 +896,16 @@
       <!-- Actions rapides -->
       <div class="quick-actions fade-in">
         <div class="action-btn" onclick="app.showHistory()">
-          <div class="action-icon">📊</div>
+          <div class="action-icon">📅</div>
           <div class="action-label">Historique</div>
         </div>
         <div class="action-btn" onclick="app.showProgression()">
-          <div class="action-icon">📈</div>
+          <div class="action-icon">📊</div>
           <div class="action-label">Progression</div>
         </div>
-        <div class="action-btn" onclick="app.exportData()">
-          <div class="action-icon">💾</div>
-          <div class="action-label">Export</div>
+        <div class="action-btn" onclick="app.showIntensificationGuide()">
+          <div class="action-icon">🔥</div>
+          <div class="action-label">Techniques</div>
         </div>
         <div class="action-btn" onclick="app.showSettings()">
           <div class="action-icon">⚙️</div>
@@ -982,7 +938,7 @@
 
       <!-- Exercices -->
       <div class="card fade-in">
-        <div class="section-title">Programme du jour</div>
+        <div class="section-title">Programme du jour <span class="intensity-badge">PROGRESSION LINÉAIRE</span></div>
         <div class="exercise-list" id="exerciseList"></div>
         <button class="btn" onclick="app.startWorkout()" style="margin-top: 18px;">
           🚀 Démarrer la séance
@@ -994,7 +950,7 @@
     <div id="tab-stats" class="tab-content hidden">
       <!-- Graphique volume -->
       <div class="chart-card fade-in">
-        <div class="chart-title">📊 WORKOUT VOLUME</div>
+        <div class="chart-title">WORKOUT VOLUME</div>
         <div class="chart-container">
           <canvas id="volumeChart"></canvas>
         </div>
@@ -1002,7 +958,7 @@
 
       <!-- Calendrier -->
       <div class="chart-card fade-in">
-        <div class="chart-title">📅 GYM SESSIONS - HEATMAP CALENDAR</div>
+        <div class="chart-title">GYM SESSIONS - HEATMAP CALENDAR</div>
         <div id="calendarDisplay"></div>
       </div>
     </div>
@@ -1011,7 +967,7 @@
     <div id="tab-muscles" class="tab-content hidden">
       <!-- Radar -->
       <div class="chart-card fade-in">
-        <div class="chart-title">💪 INTENSITÉ RELATIVE PAR MUSCLE</div>
+        <div class="chart-title">INTENSITÉ RELATIVE PAR MUSCLE</div>
         <div class="chart-container" style="height: 350px;">
           <canvas id="radarChart"></canvas>
         </div>
@@ -1019,7 +975,7 @@
 
       <!-- Donut -->
       <div class="chart-card fade-in">
-        <div class="chart-title">🎯 ANALYSE MUSCULAIRE</div>
+        <div class="chart-title">ANALYSE MUSCULAIRE</div>
         <div class="chart-container">
           <canvas id="donutChart"></canvas>
         </div>
@@ -1036,7 +992,7 @@
   <!-- Navigation inférieure -->
   <div class="bottom-nav">
     <div class="nav-item active" data-nav="seances">
-      <div class="nav-icon">🏠</div>
+      <div class="nav-icon">💪</div>
       <div class="nav-label">Home</div>
     </div>
     <div class="nav-item" data-nav="stats">
@@ -1065,20 +1021,23 @@
       <div class="exercise-details">
         <div class="exercise-detail">
           <div class="detail-value" id="workoutSets">0/0</div>
-          <div class="detail-label">Séries</div>
+          <div class="detail-label">SÉRIES</div>
         </div>
         <div class="exercise-detail">
           <div class="detail-value" id="workoutReps">0</div>
-          <div class="detail-label">Répétitions</div>
+          <div class="detail-label">RÉPÉTITIONS</div>
         </div>
         <div class="exercise-detail">
           <div class="detail-value" id="workoutWeight">0kg</div>
-          <div class="detail-label">Poids</div>
+          <div class="detail-label">POIDS</div>
         </div>
         <div class="exercise-detail">
           <div class="detail-value" id="workoutRest">0s</div>
-          <div class="detail-label">Repos</div>
+          <div class="detail-label">REPOS</div>
         </div>
+      </div>
+      <div class="progression-info" id="workoutProgression">
+        <div class="progression-text" id="progressionText">Chargement des données de progression...</div>
       </div>
     </div>
     
@@ -1149,31 +1108,196 @@
           dimanche: {
             title: "Dimanche - Dos + Jambes Lourdes + Bras",
             exercises: [
-              { name: "Trap Bar Deadlift", sets: 5, reps: "6-8", rest: 120, startWeight: 75, increment: 5, frequency: 3, targetWeight: 120 },
-              { name: "Goblet Squat", sets: 4, reps: "10", rest: 75, startWeight: 25, increment: 2.5, frequency: 2, targetWeight: 57.5 },
-              { name: "Leg Press", sets: 4, reps: "10", rest: 75, startWeight: 110, increment: 10, frequency: 2, targetWeight: 240 },
-              { name: "Lat Pulldown (prise large)", sets: 4, reps: "10", rest: 90, startWeight: 60, increment: 2.5, frequency: 2, targetWeight: 92.5 },
-              { name: "Landmine Press", sets: 4, reps: "10", rest: 90, startWeight: 35, increment: 2.5, frequency: 2, targetWeight: 67.5 },
-              { name: "Rowing Machine (prise large)", sets: 4, reps: "10", rest: 75, startWeight: 50, increment: 2.5, frequency: 2, targetWeight: 82.5 },
-              { name: "Incline Curl", sets: 4, reps: "12", rest: 75, startWeight: 12, increment: 2.5, frequency: 3, targetWeight: 34.5 },
-              { name: "Cable Pushdown", sets: 3, reps: "12", rest: 75, startWeight: 20, increment: 2.5, frequency: 3, targetWeight: 42.5 }
+              { 
+                name: "Trap Bar Deadlift", 
+                sets: 5, 
+                reps: "6-8", 
+                rest: 120, 
+                startWeight: 75, 
+                increment: 5, 
+                frequency: 3, 
+                targetWeight: 120,
+                intensity: "Progression Linéaire",
+                technique: "Augmentation de charge toutes les 3 semaines"
+              },
+              { 
+                name: "Goblet Squat", 
+                sets: 4, 
+                reps: "10", 
+                rest: 75, 
+                startWeight: 25, 
+                increment: 2.5, 
+                frequency: 2, 
+                targetWeight: 57.5,
+                intensity: "Progression Linéaire",
+                technique: "Augmentation de charge toutes les 2 semaines"
+              },
+              { 
+                name: "Leg Press", 
+                sets: 4, 
+                reps: "10", 
+                rest: 75, 
+                startWeight: 110, 
+                increment: 10, 
+                frequency: 2, 
+                targetWeight: 240,
+                intensity: "Progression Linéaire",
+                technique: "Augmentation de charge toutes les 2 semaines"
+              },
+              { 
+                name: "Lat Pulldown (prise large)", 
+                sets: 4, 
+                reps: "10", 
+                rest: 90, 
+                startWeight: 60, 
+                increment: 2.5, 
+                frequency: 2, 
+                targetWeight: 92.5,
+                intensity: "Progression Linéaire",
+                technique: "Augmentation de charge toutes les 2 semaines"
+              },
+              { 
+                name: "Landmine Press", 
+                sets: 4, 
+                reps: "10", 
+                rest: 90, 
+                startWeight: 35, 
+                increment: 2.5, 
+                frequency: 2, 
+                targetWeight: 67.5,
+                intensity: "Progression Linéaire",
+                technique: "Augmentation de charge toutes les 2 semaines"
+              },
+              { 
+                name: "Rowing Machine (prise large)", 
+                sets: 4, 
+                reps: "10", 
+                rest: 75, 
+                startWeight: 50, 
+                increment: 2.5, 
+                frequency: 2, 
+                targetWeight: 82.5,
+                intensity: "Progression Linéaire",
+                technique: "Augmentation de charge toutes les 2 semaines"
+              },
+              { 
+                name: "Incline Curl", 
+                sets: 4, 
+                reps: "12", 
+                rest: 75, 
+                startWeight: 12, 
+                increment: 2.5, 
+                frequency: 3, 
+                targetWeight: 34.5,
+                intensity: "Progression Linéaire",
+                technique: "Augmentation de charge toutes les 3 semaines"
+              },
+              { 
+                name: "Cable Pushdown", 
+                sets: 3, 
+                reps: "12", 
+                rest: 75, 
+                startWeight: 20, 
+                increment: 2.5, 
+                frequency: 3, 
+                targetWeight: 42.5,
+                intensity: "Progression Linéaire",
+                technique: "Augmentation de charge toutes les 3 semaines"
+              }
             ]
           },
           mardi: {
             title: "Mardi - Pecs + Épaules + Triceps",
             exercises: [
-              { name: "Dumbbell Press", sets: 5, reps: "10", rest: 105, startWeight: 22, increment: 2.5, frequency: 3, targetWeight: 45 },
-              { name: "Cable Fly (poulies moyennes)", sets: 4, reps: "12", rest: 60, startWeight: 10, increment: 2.5, frequency: 3, targetWeight: 32.5 },
-              { name: "Leg Press leger", sets: 3, reps: "15", rest: 60, startWeight: 80, increment: 10, frequency: 3, targetWeight: 170 },
-              { name: "Extension Triceps Corde", sets: 5, reps: "12", rest: 75, startWeight: 20, increment: 2.5, frequency: 3, targetWeight: 42.5 },
-              { name: "Lateral Raises", sets: 3, reps: "15", rest: 60, startWeight: 8, increment: 2.5, frequency: 4, targetWeight: 23 },
-              { name: "Wrist Curl", sets: 3, reps: "20", rest: 45, startWeight: 30, increment: 2.5, frequency: 4, targetWeight: 47.5 }
+              { 
+                name: "Dumbbell Press", 
+                sets: 5, 
+                reps: "10", 
+                rest: 105, 
+                startWeight: 22, 
+                increment: 2.5, 
+                frequency: 3, 
+                targetWeight: 45,
+                intensity: "Progression Linéaire",
+                technique: "Augmentation de charge toutes les 3 semaines"
+              },
+              { 
+                name: "Cable Fly (poulies moyennes)", 
+                sets: 4, 
+                reps: "12", 
+                rest: 60, 
+                startWeight: 10, 
+                increment: 2.5, 
+                frequency: 3, 
+                targetWeight: 32.5,
+                intensity: "Progression Linéaire",
+                technique: "Augmentation de charge toutes les 3 semaines"
+              },
+              { 
+                name: "Leg Press leger", 
+                sets: 3, 
+                reps: "15", 
+                rest: 60, 
+                startWeight: 80, 
+                increment: 10, 
+                frequency: 3, 
+                targetWeight: 170,
+                intensity: "Progression Linéaire",
+                technique: "Augmentation de charge toutes les 3 semaines"
+              },
+              { 
+                name: "Extension Triceps Corde", 
+                sets: 5, 
+                reps: "12", 
+                rest: 75, 
+                startWeight: 20, 
+                increment: 2.5, 
+                frequency: 3, 
+                targetWeight: 42.5,
+                intensity: "Progression Linéaire",
+                technique: "Augmentation de charge toutes les 3 semaines"
+              },
+              { 
+                name: "Lateral Raises", 
+                sets: 3, 
+                reps: "15", 
+                rest: 60, 
+                startWeight: 8, 
+                increment: 2.5, 
+                frequency: 4, 
+                targetWeight: 23,
+                intensity: "Progression Linéaire",
+                technique: "Augmentation de charge toutes les 4 semaines"
+              },
+              { 
+                name: "Wrist Curl", 
+                sets: 3, 
+                reps: "20", 
+                rest: 45, 
+                startWeight: 30, 
+                increment: 2.5, 
+                frequency: 4, 
+                targetWeight: 47.5,
+                intensity: "Progression Linéaire",
+                technique: "Augmentation de charge toutes les 4 semaines"
+              }
             ]
           },
           maison: {
             title: "Séance Maison (2x/semaine - Mardi & Jeudi soir)",
             exercises: [
-              { name: "Hammer Curl", sets: 3, reps: "12", rest: 60, startWeight: 12, increment: 2.5, frequency: 3, targetWeight: 34.5 }
+              { 
+                name: "Hammer Curl", 
+                sets: 3, 
+                reps: "12", 
+                rest: 60, 
+                startWeight: 12, 
+                increment: 2.5, 
+                frequency: 3, 
+                targetWeight: 34.5,
+                intensity: "Progression Linéaire",
+                technique: "Augmentation de charge toutes les 3 semaines"
+              }
             ]
           }
         };
@@ -1237,6 +1361,19 @@
         const { startWeight, increment, frequency } = exercise;
         const progressions = Math.floor(week / frequency);
         return Math.round((startWeight + (increment * progressions)) * 10) / 10;
+      }
+
+      getProgressionInfo(exercise, week) {
+        const currentWeight = this.calculateWeight(exercise, week);
+        const nextIncreaseWeek = Math.ceil(week / exercise.frequency) * exercise.frequency + 1;
+        const weeksUntilIncrease = nextIncreaseWeek - week;
+        
+        return {
+          currentWeight,
+          nextIncreaseWeek,
+          weeksUntilIncrease,
+          technique: exercise.technique
+        };
       }
 
       switchTab(tabName) {
@@ -1321,14 +1458,26 @@
         let html = '';
         workout.exercises.forEach(ex => {
           const weight = this.calculateWeight(ex, this.currentWeek);
+          const progression = this.getProgressionInfo(ex, this.currentWeek);
+          
           html += `
             <div class="exercise-card">
-              <div class="exercise-header">${ex.name}</div>
+              <div class="exercise-header">
+                ${ex.name} 
+                <span class="intensity-badge">${ex.intensity}</span>
+              </div>
               <div class="exercise-stats">
                 <span class="stat-chip">${ex.sets} séries</span>
                 <span class="stat-chip">${ex.reps} reps</span>
                 <span class="stat-chip weight">${weight}kg</span>
                 <span class="stat-chip">${ex.rest}s repos</span>
+                <span class="stat-chip intensity">${ex.frequency} sem.</span>
+              </div>
+              <div class="progression-info">
+                <div class="progression-text">
+                  ${progression.technique} • Prochaine augmentation: Semaine ${progression.nextIncreaseWeek} 
+                  (${progression.weeksUntilIncrease} semaine${progression.weeksUntilIncrease > 1 ? 's' : ''})
+                </div>
               </div>
             </div>
           `;
@@ -1358,12 +1507,17 @@
 
         const exercise = workout.exercises[this.currentExerciseIndex];
         const weight = this.calculateWeight(exercise, this.currentWeek);
+        const progression = this.getProgressionInfo(exercise, this.currentWeek);
 
         document.getElementById('workoutExerciseName').textContent = exercise.name;
         document.getElementById('workoutSets').textContent = `${this.currentSet}/${exercise.sets}`;
         document.getElementById('workoutReps').textContent = exercise.reps;
         document.getElementById('workoutWeight').textContent = `${weight}kg`;
         document.getElementById('workoutRest').textContent = `${exercise.rest}s`;
+        
+        // Mettre à jour les informations de progression
+        document.getElementById('progressionText').textContent = 
+          `${progression.technique} • Prochaine augmentation dans ${progression.weeksUntilIncrease} semaine${progression.weeksUntilIncrease > 1 ? 's' : ''}`;
       }
 
       completeSet() {
@@ -1443,13 +1597,57 @@
           `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
       }
 
+      showIntensificationGuide() {
+        const html = `
+          <div class="modal-overlay" onclick="if(event.target === this) this.remove()">
+            <div class="modal-content">
+              <div class="modal-close"></div>
+              <div class="modal-header">🔥 Techniques d'Intensification</div>
+              <div style="max-height: 60vh; overflow-y: auto;">
+                <div style="background: rgba(118, 118, 128, 0.12); border-radius: 16px; padding: 16px; margin-bottom: 12px;">
+                  <div style="font-size: 17px; font-weight: 800; color: #FF9F0A; margin-bottom: 6px;">Progression Linéaire</div>
+                  <div style="font-size: 13px; color: var(--color-text-secondary);">
+                    Augmentation systématique des charges selon un calendrier prédéfini. Chaque exercice a sa propre fréquence d'augmentation (2, 3 ou 4 semaines).
+                  </div>
+                </div>
+                
+                <div style="background: rgba(118, 118, 128, 0.12); border-radius: 16px; padding: 16px; margin-bottom: 12px;">
+                  <div style="font-size: 17px; font-weight: 800; color: #30D158; margin-bottom: 6px;">Surcharge Progressive</div>
+                  <div style="font-size: 13px; color: var(--color-text-secondary);">
+                    Le programme suit le principe de surcharge progressive avec des augmentations de 2.5kg à 10kg selon les exercices.
+                  </div>
+                </div>
+                
+                <div style="background: rgba(118, 118, 128, 0.12); border-radius: 16px; padding: 16px; margin-bottom: 12px;">
+                  <div style="font-size: 17px; font-weight: 800; color: #0A84FF; margin-bottom: 6px;">Structuration par Fréquence</div>
+                  <div style="font-size: 13px; color: var(--color-text-secondary);">
+                    Les groupes musculaires sont travaillés 2 à 3 fois par semaine avec des volumes d'entraînement optimisés pour la croissance.
+                  </div>
+                </div>
+                
+                <div style="background: rgba(118, 118, 128, 0.12); border-radius: 16px; padding: 16px; margin-bottom: 12px;">
+                  <div style="font-size: 17px; font-weight: 800; color: #BF5AF2; margin-bottom: 6px;">Variation des Charges</div>
+                  <div style="font-size: 13px; color: var(--color-text-secondary);">
+                    Le programme alterne entre jours lourds et jours légers pour optimiser la récupération et la progression.
+                  </div>
+                </div>
+              </div>
+              <button class="btn" onclick="this.closest('.modal-overlay').remove()" style="margin-top: 16px;">
+                Fermer
+              </button>
+            </div>
+          </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', html);
+      }
+
       // Les autres méthodes (renderVolumeChart, renderCalendar, etc.) restent inchangées
       renderVolumeChart() {
         const ctx = document.getElementById('volumeChart');
         if (!ctx) return;
 
         const labels = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-        const data = [0, 6200, 0, 0, 7500, 0, 10200];
+        const data = [0, 7200, 0, 0, 8500, 0, 10200];
         const target = 7200;
 
         if (this.charts.volume) this.charts.volume.destroy();
@@ -1769,7 +1967,7 @@
     window.app = app;
 
     console.log('%c🏆 HYBRID MASTER 51 - ULTIMATE PRO', 'color: #30D158; font-size: 20px; font-weight: bold;');
-    console.log('%c✨ Style iOS 18 appliqué', 'color: #0A84FF; font-size: 14px;');
+    console.log('%c✨ Techniques d\'intensification mises en avant', 'color: #FF9F0A; font-size: 14px;');
   </script>
 </body>
 </html>
