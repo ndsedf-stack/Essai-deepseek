@@ -715,6 +715,177 @@
       }
     }
     
+    /* Timer amélioré */
+    .timer-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(28, 28, 30, 0.7);
+      backdrop-filter: blur(40px);
+      border-radius: 20px;
+      border: var(--glass-border);
+      margin: 20px 0;
+    }
+    
+    .timer-display {
+      font-size: 64px;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px rgba(10, 132, 255, 0.5);
+    }
+    
+    .timer-controls {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+    }
+    
+    .timer-btn {
+      flex: 1;
+      padding: 16px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .timer-start {
+      background: linear-gradient(135deg, var(--color-accent-green), #28B446);
+      color: white;
+      box-shadow: 0 4px 16px rgba(48, 209, 88, 0.4);
+    }
+    
+    .timer-pause {
+      background: rgba(118, 118, 128, 0.24);
+      color: var(--color-text-primary);
+    }
+    
+    .timer-reset {
+      background: rgba(255, 69, 58, 0.2);
+      color: #FF453A;
+    }
+    
+    /* Mode entraînement amélioré */
+    .workout-mode {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--color-background);
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    
+    .workout-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    
+    .workout-title {
+      font-size: 28px;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .workout-close {
+      background: rgba(118, 118, 128, 0.24);
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      color: var(--color-text-primary);
+      cursor: pointer;
+      font-size: 20px;
+    }
+    
+    .current-exercise {
+      background: rgba(28, 28, 30, 0.7);
+      backdrop-filter: blur(40px);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 20px;
+      border: var(--glass-border);
+    }
+    
+    .exercise-name {
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 16px;
+      color: var(--color-text-primary);
+    }
+    
+    .exercise-details {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    
+    .exercise-detail {
+      background: rgba(118, 118, 128, 0.12);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+    }
+    
+    .detail-value {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--color-accent-blue);
+      margin-bottom: 4px;
+    }
+    
+    .detail-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .workout-controls {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    
+    .control-btn {
+      flex: 1;
+      padding: 18px;
+      border-radius: 16px;
+      font-weight: 800;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .control-complete {
+      background: linear-gradient(135deg, var(--color-accent-green), #28B446);
+      color: white;
+      box-shadow: 0 4px 16px rgba(48, 209, 88, 0.4);
+    }
+    
+    .control-skip {
+      background: rgba(118, 118, 128, 0.24);
+      color: var(--color-text-primary);
+    }
+    
     /* Responsive */
     @media (max-width: 768px) {
       .quick-actions {
@@ -733,6 +904,10 @@
       .header {
         padding: 24px;
         border-radius: 24px;
+      }
+      
+      .timer-display {
+        font-size: 48px;
       }
     }
   </style>
@@ -878,14 +1053,62 @@
     </div>
   </div>
 
+  <!-- Mode entraînement -->
+  <div id="workoutMode" class="workout-mode hidden">
+    <div class="workout-header">
+      <div class="workout-title">Mode Entraînement</div>
+      <button class="workout-close" onclick="app.exitWorkout()">✕</button>
+    </div>
+    
+    <div class="current-exercise">
+      <div class="exercise-name" id="workoutExerciseName">Exercise Name</div>
+      <div class="exercise-details">
+        <div class="exercise-detail">
+          <div class="detail-value" id="workoutSets">0/0</div>
+          <div class="detail-label">Séries</div>
+        </div>
+        <div class="exercise-detail">
+          <div class="detail-value" id="workoutReps">0</div>
+          <div class="detail-label">Répétitions</div>
+        </div>
+        <div class="exercise-detail">
+          <div class="detail-value" id="workoutWeight">0kg</div>
+          <div class="detail-label">Poids</div>
+        </div>
+        <div class="exercise-detail">
+          <div class="detail-value" id="workoutRest">0s</div>
+          <div class="detail-label">Repos</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="timer-container">
+      <div class="timer-display" id="workoutTimer">00:00</div>
+      <div class="timer-controls">
+        <button class="timer-btn timer-start" id="timerStart" onclick="app.startTimer()">Démarrer</button>
+        <button class="timer-btn timer-pause" id="timerPause" onclick="app.pauseTimer()" disabled>Pause</button>
+        <button class="timer-btn timer-reset" onclick="app.resetTimer()">Reset</button>
+      </div>
+    </div>
+    
+    <div class="workout-controls">
+      <button class="control-btn control-complete" onclick="app.completeSet()">Série Terminée</button>
+      <button class="control-btn control-skip" onclick="app.skipExercise()">Passer l'exercice</button>
+    </div>
+  </div>
+
   <script>
-    // Le code JavaScript reste identique à l'original
     class HybridMaster51 {
       constructor() {
         this.currentWeek = 1;
         this.currentDay = 'dimanche';
         this.workoutHistory = this.loadHistory();
         this.charts = {};
+        this.timer = null;
+        this.timerSeconds = 0;
+        this.timerRunning = false;
+        this.currentExerciseIndex = 0;
+        this.currentSet = 1;
         this.init();
       }
 
@@ -1113,6 +1336,114 @@
         document.getElementById('exerciseList').innerHTML = html;
       }
 
+      startWorkout() {
+        document.getElementById('workoutMode').classList.remove('hidden');
+        this.currentExerciseIndex = 0;
+        this.currentSet = 1;
+        this.resetTimer();
+        this.updateWorkoutDisplay();
+      }
+
+      exitWorkout() {
+        document.getElementById('workoutMode').classList.add('hidden');
+        this.resetTimer();
+      }
+
+      updateWorkoutDisplay() {
+        const workout = this.program[this.currentDay];
+        if (!workout || this.currentExerciseIndex >= workout.exercises.length) {
+          this.exitWorkout();
+          return;
+        }
+
+        const exercise = workout.exercises[this.currentExerciseIndex];
+        const weight = this.calculateWeight(exercise, this.currentWeek);
+
+        document.getElementById('workoutExerciseName').textContent = exercise.name;
+        document.getElementById('workoutSets').textContent = `${this.currentSet}/${exercise.sets}`;
+        document.getElementById('workoutReps').textContent = exercise.reps;
+        document.getElementById('workoutWeight').textContent = `${weight}kg`;
+        document.getElementById('workoutRest').textContent = `${exercise.rest}s`;
+      }
+
+      completeSet() {
+        const workout = this.program[this.currentDay];
+        if (!workout) return;
+
+        const exercise = workout.exercises[this.currentExerciseIndex];
+        
+        if (this.currentSet < exercise.sets) {
+          this.currentSet++;
+          this.resetTimer();
+          this.startTimer();
+        } else {
+          this.currentExerciseIndex++;
+          this.currentSet = 1;
+          
+          if (this.currentExerciseIndex >= workout.exercises.length) {
+            alert('Félicitations! Vous avez terminé votre séance!');
+            this.exitWorkout();
+            return;
+          }
+          
+          this.resetTimer();
+        }
+        
+        this.updateWorkoutDisplay();
+      }
+
+      skipExercise() {
+        this.currentExerciseIndex++;
+        this.currentSet = 1;
+        
+        const workout = this.program[this.currentDay];
+        if (this.currentExerciseIndex >= workout.exercises.length) {
+          alert('Séance terminée!');
+          this.exitWorkout();
+          return;
+        }
+        
+        this.resetTimer();
+        this.updateWorkoutDisplay();
+      }
+
+      startTimer() {
+        if (this.timerRunning) return;
+        
+        this.timerRunning = true;
+        document.getElementById('timerStart').disabled = true;
+        document.getElementById('timerPause').disabled = false;
+        
+        this.timer = setInterval(() => {
+          this.timerSeconds++;
+          this.updateTimerDisplay();
+        }, 1000);
+      }
+
+      pauseTimer() {
+        if (!this.timerRunning) return;
+        
+        this.timerRunning = false;
+        document.getElementById('timerStart').disabled = false;
+        document.getElementById('timerPause').disabled = true;
+        
+        clearInterval(this.timer);
+      }
+
+      resetTimer() {
+        this.pauseTimer();
+        this.timerSeconds = 0;
+        this.updateTimerDisplay();
+      }
+
+      updateTimerDisplay() {
+        const minutes = Math.floor(this.timerSeconds / 60);
+        const seconds = this.timerSeconds % 60;
+        document.getElementById('workoutTimer').textContent = 
+          `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }
+
+      // Les autres méthodes (renderVolumeChart, renderCalendar, etc.) restent inchangées
       renderVolumeChart() {
         const ctx = document.getElementById('volumeChart');
         if (!ctx) return;
@@ -1337,10 +1668,6 @@
 
         html += '</div>';
         document.getElementById('muscleVolumeList').innerHTML = html;
-      }
-
-      startWorkout() {
-        alert('🚀 Mode entraînement\n\nDémarrage de la séance...\n\nFonctionnalité complète en cours de développement!');
       }
 
       showHistory() {
