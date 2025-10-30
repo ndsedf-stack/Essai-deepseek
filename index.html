@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HYBRID MASTER 51 - Ultimate Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --color-background: #000000;
+      --color-surface: rgba(28, 28, 30, 0.8);
+      --color-surface-elevated: rgba(44, 44, 46, 0.9);
+      --color-accent-blue: #0A84FF;
+      --color-accent-green: #30D158;
+      --color-accent-cyan: #64D2FF;
+      --color-text-primary: #FFFFFF;
+      --color-text-secondary: #98989D;
+      --glow-blue: 0 0 30px rgba(10, 132, 255, 0.6);
+      --glow-green: 0 0 30px rgba(48, 209, 88, 0.6);
+      --glass-border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+      background: var(--color-background);
+      color: var(--color-text-primary);
+      font-family: -apple-system, 'SF Pro Display', sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      padding-bottom: 90px;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(circle at 30% 40%, rgba(10, 132, 255, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 70% 60%, rgba(48, 209, 88, 0.12) 0%, transparent 40%);
+      animation: glowMove 20s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    @keyframes glowMove {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-3%, -3%); }
+    }
+    
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    
+    /* Style iOS 18 avancé - Cartes avec effet verre */
+    .card {
+      background: rgba(28, 28, 30, 0.7);
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 18px;
+      border: var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+    
+    .card-elevated {
+      background: rgba(44, 44, 46, 0.85);
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+    }
+    
+    /* En-tête amélioré */
+    .header {
+      background: rgba(44, 44, 46, 0.8);
+      backdrop-filter: blur(50px) saturate(200%);
+      border-radius: 28px;
+      padding: 28px;
+      margin-bottom: 24px;
+      border: var(--glass-border);
+      box-shadow: var(--glow-blue);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--color-accent-blue), transparent);
+    }
+    
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    
+    .app-logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .logo-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-green));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      box-shadow: var(--glow-green);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .logo-icon::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+      border-radius: 16px;
+    }
+    
+    .app-title h1 {
+      font-size: 28px;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 10px rgba(10, 132, 255, 0.3);
+    }
+    
+    .app-subtitle {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      font-weight: 600;
+      margin-top: 4px;
+      letter-spacing: 0.3px;
+    }
+    
+    .pro-badge {
+      background: linear-gradient(135deg, #FF6B35, #FF8E53);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .pro-badge::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+    
+    .pro-badge:hover::before {
+      left: 100%;
+    }
+    
+    /* Onglets style iOS 18 amélioré */
+    .tabs-container {
+      display: flex;
+      background: rgba(118, 118, 128, 0.12);
+      border-radius: 16px;
+      padding: 4px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    
+    .tab-btn {
+      flex: 1;
+      padding: 12px 16px;
+      background: transparent;
+      border: none;
+      border-radius: 12px;
+      color: var(--color-text-secondary);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .tab-btn.active {
+      background: rgba(44, 44, 46, 0.9);
+      color: var(--color-text-primary);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Actions rapides iOS 18 amélioré */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    
+    .action-btn {
+      background: rgba(28, 28, 30, 0.7);
+      backdrop-filter: blur(40px);
+      border: var(--glass-border);
+      border-radius: 20px;
+      padding: 22px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .action-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(10, 132, 255, 0.1), rgba(48, 209, 88, 0.1));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .action-btn:hover::before {
+      opacity: 1;
+    }
+    
+    .action-btn:active {
+      transform: scale(0.96);
+      background: rgba(44, 44, 46, 0.8);
+    }
+    
+    .action-icon {
+      font-size: 38px;
+      margin-bottom: 6px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+      z-index: 1;
+    }
+    
+    .action-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      z-index: 1;
+    }
+    
+    /* Sélecteurs iOS 18 améliorés */
+    .control-group {
+      margin-bottom: 18px;
+    }
+    
+    .control-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      display: block;
+    }
+    
+    select, input {
+      width: 100%;
+      background: rgba(118, 118, 128, 0.12);
+      border: none;
+      padding: 16px 18px;
+      border-radius: 14px;
+      color: var(--color-text-primary);
+      font-size: 16px;
+      font-weight: 600;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    
+    select:focus, input:focus {
+      outline: none;
+      background: rgba(118, 118, 128, 0.18);
+      box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.5);
+    }
+    
+    /* Boutons iOS 18 améliorés */
+    .btn {
+      background: linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-green));
+      color: white;
+      border: none;
+      padding: 18px 26px;
+      border-radius: 16px;
+      font-weight: 800;
+      font-size: 17px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      box-shadow: 0 6px 20px rgba(48, 209, 88, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    .btn:hover::before {
+      left: 100%;
+    }
+    
+    .btn:active {
+      transform: scale(0.96);
+    }
+    
+    .btn-secondary {
+      background: rgba(118, 118, 128, 0.24);
+      color: var(--color-accent-blue);
+      box-shadow: none;
+    }
+    
+    /* Liste d'exercices iOS 18 améliorée */
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .exercise-card {
+      background: rgba(28, 28, 30, 0.7);
+      backdrop-filter: blur(40px);
+      border: var(--glass-border);
+      border-radius: 18px;
+      padding: 18px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .exercise-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(10, 132, 255, 0.5), transparent);
+    }
+    
+    .exercise-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .exercise-card:active {
+      transform: scale(0.98);
+      background: rgba(44, 44, 46, 0.8);
+    }
+    
+    .exercise-header {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--color-text-primary);
+      margin-bottom: 12px;
+    }
+    
+    .exercise-stats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .stat-chip {
+      background: rgba(10, 132, 255, 0.15);
+      border: 1px solid rgba(10, 132, 255, 0.3);
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-accent-blue);
+      backdrop-filter: blur(10px);
+    }
+    
+    .stat-chip.weight {
+      background: rgba(48, 209, 88, 0.15);
+      border-color: rgba(48, 209, 88, 0.3);
+      color: var(--color-accent-green);
+    }
+    
+    /* Graphiques améliorés */
+    .chart-card {
+      background: rgba(28, 28, 30, 0.7);
+      backdrop-filter: blur(40px);
+      border: var(--glass-border);
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .chart-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--color-text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .chart-container {
+      height: 300px;
+      position: relative;
+    }
+    
+    /* Calendrier amélioré */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+    
+    .calendar-day {
+      aspect-ratio: 1;
+      background: rgba(118, 118, 128, 0.12);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-text-secondary);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .calendar-day.completed {
+      background: linear-gradient(135deg, var(--color-accent-green), #28B446);
+      color: white;
+      box-shadow: 0 4px 12px rgba(48, 209, 88, 0.4);
+    }
+    
+    .calendar-day.partial {
+      background: linear-gradient(135deg, var(--color-accent-blue), #0077ED);
+      color: white;
+      box-shadow: 0 4px 12px rgba(10, 132, 255, 0.4);
+    }
+    
+    /* Modal iOS 18 amélioré */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(20px);
+      z-index: 9999;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .modal-content {
+      background: rgba(44, 44, 46, 0.95);
+      backdrop-filter: blur(50px) saturate(200%);
+      border-radius: 28px 28px 0 0;
+      padding: 28px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: var(--glass-border);
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    
+    .modal-header {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--color-text-primary);
+      margin-bottom: 24px;
+      text-align: center;
+      background: linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .modal-close {
+      width: 50px;
+      height: 6px;
+      background: rgba(118, 118, 128, 0.3);
+      border-radius: 3px;
+      margin: 0 auto 24px;
+    }
+    
+    /* Navigation inférieure iOS 18 améliorée */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(44, 44, 46, 0.9);
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
+      border-top: var(--glass-border);
+      padding: 10px 0 28px 0;
+      display: flex;
+      justify-content: space-around;
+      z-index: 1000;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 10px 18px;
+      transition: all 0.3s ease;
+      border-radius: 14px;
+      position: relative;
+    }
+    
+    .nav-item::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      width: 0;
+      height: 3px;
+      background: var(--color-accent-green);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-item.active::after {
+      width: 30px;
+    }
+    
+    .nav-item:active {
+      transform: scale(0.9);
+    }
+    
+    .nav-item.active .nav-icon {
+      color: var(--color-accent-green);
+      transform: translateY(-2px);
+    }
+    
+    .nav-item.active .nav-label {
+      color: var(--color-accent-green);
+      font-weight: 800;
+    }
+    
+    .nav-icon {
+      font-size: 28px;
+      color: var(--color-text-secondary);
+      transition: all 0.3s ease;
+    }
+    
+    .nav-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--color-text-secondary);
+      transition: all 0.3s ease;
+    }
+    
+    /* Stats grid amélioré */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin: 18px 0;
+    }
+    
+    .stat-box {
+      background: rgba(118, 118, 128, 0.12);
+      border-radius: 16px;
+      padding: 18px;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .stat-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(10, 132, 255, 0.1), rgba(48, 209, 88, 0.1));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .stat-box:hover::before {
+      opacity: 1;
+    }
+    
+    .stat-value {
+      font-size: 32px;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 6px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .stat-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-text-secondary);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    /* Section titre améliorée */
+    .section-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--color-text-primary);
+      margin-bottom: 18px;
+      margin-top: 10px;
+      background: linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    /* Animation d'apparition des éléments */
+    .fade-in {
+      animation: fadeInUp 0.5s ease forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .container {
+        padding: 14px;
+      }
+      
+      .card {
+        padding: 20px;
+        border-radius: 20px;
+      }
+      
+      .header {
+        padding: 24px;
+        border-radius: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- En-tête -->
+    <div class="header fade-in">
+      <div class="header-top">
+        <div class="app-logo">
+          <div class="logo-icon">🏆</div>
+          <div class="app-title">
+            <h1>HYBRID MASTER 51</h1>
+            <div class="app-subtitle">Programme Pro • 26 Semaines</div>
+          </div>
+        </div>
+        <div class="pro-badge">PRO</div>
+      </div>
+      
+      <!-- Onglets -->
+      <div class="tabs-container">
+        <button class="tab-btn active" data-tab="seances">Séances</button>
+        <button class="tab-btn" data-tab="stats">Stats</button>
+        <button class="tab-btn" data-tab="muscles">Muscles</button>
+      </div>
+    </div>
+
+    <!-- TAB: SÉANCES -->
+    <div id="tab-seances" class="tab-content">
+      <!-- Actions rapides -->
+      <div class="quick-actions fade-in">
+        <div class="action-btn" onclick="app.showHistory()">
+          <div class="action-icon">📊</div>
+          <div class="action-label">Historique</div>
+        </div>
+        <div class="action-btn" onclick="app.showProgression()">
+          <div class="action-icon">📈</div>
+          <div class="action-label">Progression</div>
+        </div>
+        <div class="action-btn" onclick="app.exportData()">
+          <div class="action-icon">💾</div>
+          <div class="action-label">Export</div>
+        </div>
+        <div class="action-btn" onclick="app.showSettings()">
+          <div class="action-icon">⚙️</div>
+          <div class="action-label">Réglages</div>
+        </div>
+      </div>
+
+      <!-- Contrôles -->
+      <div class="card fade-in">
+        <div class="control-group">
+          <label class="control-label">📅 Semaine</label>
+          <select id="weekSelect" onchange="app.updateDisplay()"></select>
+        </div>
+        <div class="control-group">
+          <label class="control-label">🗓️ Jour d'entraînement</label>
+          <select id="daySelect" onchange="app.updateDisplay()">
+            <option value="dimanche">Dimanche - Dos + Jambes + Bras</option>
+            <option value="mardi">Mardi - Pecs + Épaules + Triceps</option>
+            <option value="vendredi">Vendredi - Dos + Jambes + Bras</option>
+            <option value="maison">Maison - Hammer Curl</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Stats de la séance -->
+      <div class="card fade-in">
+        <div class="section-title">Aperçu de la séance</div>
+        <div class="stats-grid" id="sessionStats"></div>
+      </div>
+
+      <!-- Exercices -->
+      <div class="card fade-in">
+        <div class="section-title">Programme du jour</div>
+        <div class="exercise-list" id="exerciseList"></div>
+        <button class="btn" onclick="app.startWorkout()" style="margin-top: 18px;">
+          🚀 Démarrer la séance
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB: STATS -->
+    <div id="tab-stats" class="tab-content hidden">
+      <!-- Graphique volume -->
+      <div class="chart-card fade-in">
+        <div class="chart-title">📊 WORKOUT VOLUME</div>
+        <div class="chart-container">
+          <canvas id="volumeChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Calendrier -->
+      <div class="chart-card fade-in">
+        <div class="chart-title">📅 GYM SESSIONS - HEATMAP CALENDAR</div>
+        <div id="calendarDisplay"></div>
+      </div>
+    </div>
+
+    <!-- TAB: MUSCLES -->
+    <div id="tab-muscles" class="tab-content hidden">
+      <!-- Radar -->
+      <div class="chart-card fade-in">
+        <div class="chart-title">💪 INTENSITÉ RELATIVE PAR MUSCLE</div>
+        <div class="chart-container" style="height: 350px;">
+          <canvas id="radarChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Donut -->
+      <div class="chart-card fade-in">
+        <div class="chart-title">🎯 ANALYSE MUSCULAIRE</div>
+        <div class="chart-container">
+          <canvas id="donutChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Volume par muscle -->
+      <div class="card fade-in">
+        <div class="section-title">Volume Hebdomadaire</div>
+        <div id="muscleVolumeList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation inférieure -->
+  <div class="bottom-nav">
+    <div class="nav-item active" data-nav="seances">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">Home</div>
+    </div>
+    <div class="nav-item" data-nav="stats">
+      <div class="nav-icon">📊</div>
+      <div class="nav-label">Routines</div>
+    </div>
+    <div class="nav-item" data-nav="stats">
+      <div class="nav-icon">📈</div>
+      <div class="nav-label">Progress</div>
+    </div>
+    <div class="nav-item" onclick="app.showSettings()">
+      <div class="nav-icon">⚙️</div>
+      <div class="nav-label">Settings</div>
+    </div>
+  </div>
+
+  <script>
+    // Le code JavaScript reste identique à l'original
+    class HybridMaster51 {
+      constructor() {
+        this.currentWeek = 1;
+        this.currentDay = 'dimanche';
+        this.workoutHistory = this.loadHistory();
+        this.charts = {};
+        this.init();
+      }
+
+      init() {
+        this.setupProgram();
+        this.populateWeekSelect();
+        this.setupEventListeners();
+        this.updateDisplay();
+        
+        // Ajouter des animations d'apparition
+        setTimeout(() => {
+          document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.animationDelay = '0s';
+          });
+        }, 100);
+      }
+
+      setupEventListeners() {
+        // Onglets header
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const tab = e.target.dataset.tab;
+            this.switchTab(tab);
+          });
+        });
+
+        // Nav inférieure
+        document.querySelectorAll('.nav-item[data-nav]').forEach(item => {
+          item.addEventListener('click', (e) => {
+            const nav = e.currentTarget.dataset.nav;
+            this.switchTab(nav);
+          });
+        });
+      }
+
+      setupProgram() {
+        this.program = {
+          dimanche: {
+            title: "Dimanche - Dos + Jambes Lourdes + Bras",
+            exercises: [
+              { name: "Trap Bar Deadlift", sets: 5, reps: "6-8", rest: 120, startWeight: 75, increment: 5, frequency: 3, targetWeight: 120 },
+              { name: "Goblet Squat", sets: 4, reps: "10", rest: 75, startWeight: 25, increment: 2.5, frequency: 2, targetWeight: 57.5 },
+              { name: "Leg Press", sets: 4, reps: "10", rest: 75, startWeight: 110, increment: 10, frequency: 2, targetWeight: 240 },
+              { name: "Lat Pulldown (prise large)", sets: 4, reps: "10", rest: 90, startWeight: 60, increment: 2.5, frequency: 2, targetWeight: 92.5 },
+              { name: "Landmine Press", sets: 4, reps: "10", rest: 90, startWeight: 35, increment: 2.5, frequency: 2, targetWeight: 67.5 },
+              { name: "Rowing Machine (prise large)", sets: 4, reps: "10", rest: 75, startWeight: 50, increment: 2.5, frequency: 2, targetWeight: 82.5 },
+              { name: "Incline Curl", sets: 4, reps: "12", rest: 75, startWeight: 12, increment: 2.5, frequency: 3, targetWeight: 34.5 },
+              { name: "Cable Pushdown", sets: 3, reps: "12", rest: 75, startWeight: 20, increment: 2.5, frequency: 3, targetWeight: 42.5 }
+            ]
+          },
+          mardi: {
+            title: "Mardi - Pecs + Épaules + Triceps",
+            exercises: [
+              { name: "Dumbbell Press", sets: 5, reps: "10", rest: 105, startWeight: 22, increment: 2.5, frequency: 3, targetWeight: 45 },
+              { name: "Cable Fly (poulies moyennes)", sets: 4, reps: "12", rest: 60, startWeight: 10, increment: 2.5, frequency: 3, targetWeight: 32.5 },
+              { name: "Leg Press leger", sets: 3, reps: "15", rest: 60, startWeight: 80, increment: 10, frequency: 3, targetWeight: 170 },
+              { name: "Extension Triceps Corde", sets: 5, reps: "12", rest: 75, startWeight: 20, increment: 2.5, frequency: 3, targetWeight: 42.5 },
+              { name: "Lateral Raises", sets: 3, reps: "15", rest: 60, startWeight: 8, increment: 2.5, frequency: 4, targetWeight: 23 },
+              { name: "Wrist Curl", sets: 3, reps: "20", rest: 45, startWeight: 30, increment: 2.5, frequency: 4, targetWeight: 47.5 }
+            ]
+          },
+          maison: {
+            title: "Séance Maison (2x/semaine - Mardi & Jeudi soir)",
+            exercises: [
+              { name: "Hammer Curl", sets: 3, reps: "12", rest: 60, startWeight: 12, increment: 2.5, frequency: 3, targetWeight: 34.5 }
+            ]
+          }
+        };
+
+        this.muscles = {
+          "Ischios": 18,
+          "Fessiers": 16,
+          "Dos": 22,
+          "Quadriceps": 20,
+          "Épaules": 15,
+          "Triceps": 14,
+          "Biceps": 18,
+          "Pectoraux": 18,
+          "Avant-bras": 6,
+          "Trapèzes": 10,
+          "Abdominaux": 8
+        };
+      }
+
+      loadHistory() {
+        const saved = localStorage.getItem('hybrid_history');
+        if (saved) return JSON.parse(saved);
+        
+        // Historique simulé
+        const simulated = [];
+        const now = new Date();
+        for (let i = 30; i >= 0; i--) {
+          const date = new Date(now);
+          date.setDate(date.getDate() - i);
+          if ([0, 2, 5].includes(date.getDay())) {
+            simulated.push({
+              date: date.toISOString(),
+              week: Math.max(1, Math.ceil((30 - i) / 7)),
+              day: ['dimanche', 'mardi', 'vendredi'][Math.floor(Math.random() * 3)],
+              duration: 60 + Math.floor(Math.random() * 20),
+              completedSets: 28 + Math.floor(Math.random() * 7),
+              totalSets: 33,
+              volume: 5000 + Math.floor(Math.random() * 3000)
+            });
+          }
+        }
+        this.saveHistory(simulated);
+        return simulated;
+      }
+
+      saveHistory(history) {
+        localStorage.setItem('hybrid_history', JSON.stringify(history));
+      }
+
+      populateWeekSelect() {
+        const select = document.getElementById('weekSelect');
+        for(let i = 1; i <= 26; i++) {
+          const option = document.createElement('option');
+          option.value = i;
+          option.textContent = `Semaine ${i}`;
+          select.appendChild(option);
+        }
+      }
+
+      calculateWeight(exercise, week) {
+        const { startWeight, increment, frequency } = exercise;
+        const progressions = Math.floor(week / frequency);
+        return Math.round((startWeight + (increment * progressions)) * 10) / 10;
+      }
+
+      switchTab(tabName) {
+        // Cacher tous les contenus
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+        document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+
+        // Mettre à jour les boutons header
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.tab === tabName);
+        });
+
+        // Mettre à jour nav inférieure
+        document.querySelectorAll('.nav-item').forEach(item => {
+          item.classList.remove('active');
+        });
+        const activeNavItem = document.querySelector(`.nav-item[data-nav="${tabName}"]`);
+        if (activeNavItem) activeNavItem.classList.add('active');
+
+        // Charger les graphiques si nécessaire
+        if (tabName === 'stats') {
+          setTimeout(() => {
+            this.renderVolumeChart();
+            this.renderCalendar();
+          }, 100);
+        } else if (tabName === 'muscles') {
+          setTimeout(() => {
+            this.renderRadarChart();
+            this.renderDonutChart();
+            this.renderMuscleVolume();
+          }, 100);
+        }
+      }
+
+      updateDisplay() {
+        const week = parseInt(document.getElementById('weekSelect').value) || 1;
+        const day = document.getElementById('daySelect').value;
+        this.currentWeek = week;
+        this.currentDay = day;
+        
+        this.renderSessionStats();
+        this.renderExercises();
+      }
+
+      renderSessionStats() {
+        const workout = this.program[this.currentDay];
+        if (!workout) return;
+
+        const totalSets = workout.exercises.reduce((sum, ex) => sum + ex.sets, 0);
+        const totalVolume = workout.exercises.reduce((sum, ex) => {
+          const weight = this.calculateWeight(ex, this.currentWeek);
+          const reps = typeof ex.reps === 'number' ? ex.reps : parseInt(ex.reps.split('-')[0]);
+          return sum + (weight * reps * ex.sets);
+        }, 0);
+        const duration = Math.ceil(totalSets * 2.5);
+
+        const html = `
+          <div class="stat-box">
+            <div class="stat-value">${totalSets}</div>
+            <div class="stat-label">Séries totales</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">${Math.round(totalVolume/1000)}t</div>
+            <div class="stat-label">Volume total</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">${duration}</div>
+            <div class="stat-label">Minutes</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">${workout.exercises.length}</div>
+            <div class="stat-label">Exercices</div>
+          </div>
+        `;
+        document.getElementById('sessionStats').innerHTML = html;
+      }
+
+      renderExercises() {
+        const workout = this.program[this.currentDay];
+        if (!workout) return;
+
+        let html = '';
+        workout.exercises.forEach(ex => {
+          const weight = this.calculateWeight(ex, this.currentWeek);
+          html += `
+            <div class="exercise-card">
+              <div class="exercise-header">${ex.name}</div>
+              <div class="exercise-stats">
+                <span class="stat-chip">${ex.sets} séries</span>
+                <span class="stat-chip">${ex.reps} reps</span>
+                <span class="stat-chip weight">${weight}kg</span>
+                <span class="stat-chip">${ex.rest}s repos</span>
+              </div>
+            </div>
+          `;
+        });
+        document.getElementById('exerciseList').innerHTML = html;
+      }
+
+      renderVolumeChart() {
+        const ctx = document.getElementById('volumeChart');
+        if (!ctx) return;
+
+        const labels = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+        const data = [0, 6200, 0, 0, 7500, 0, 10200];
+        const target = 7200;
+
+        if (this.charts.volume) this.charts.volume.destroy();
+
+        this.charts.volume = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: data,
+              backgroundColor: data.map((v, i) => {
+                if (v === 0) return 'rgba(118, 118, 128, 0.12)';
+                const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 280);
+                if (v >= target) {
+                  gradient.addColorStop(0, 'rgba(48, 209, 88, 0.9)');
+                  gradient.addColorStop(1, 'rgba(48, 209, 88, 0.3)');
+                } else {
+                  gradient.addColorStop(0, 'rgba(10, 132, 255, 0.9)');
+                  gradient.addColorStop(1, 'rgba(10, 132, 255, 0.3)');
+                }
+                return gradient;
+              }),
+              borderRadius: 10,
+              borderSkipped: false
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(28, 28, 30, 0.95)',
+                padding: 12,
+                titleFont: { size: 14, weight: 'bold', family: '-apple-system' },
+                bodyFont: { size: 16, weight: 'bold', family: '-apple-system' },
+                displayColors: false,
+                callbacks: {
+                  label: (context) => context.parsed.y > 0 ? `${context.parsed.y.toLocaleString()} KG` : 'Repos'
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 12000,
+                ticks: {
+                  color: '#98989D',
+                  font: { size: 12, weight: '600' },
+                  callback: (value) => value >= 1000 ? `${(value/1000).toFixed(0)}K` : value
+                },
+                grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false }
+              },
+              x: {
+                ticks: { color: '#98989D', font: { size: 13, weight: '700' } },
+                grid: { display: false }
+              }
+            }
+          }
+        });
+      }
+
+      renderCalendar() {
+        const now = new Date();
+        const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+        const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+        const startDay = firstDay.getDay();
+
+        let html = '<div class="calendar-grid">';
+        
+        // En-têtes
+        ['D', 'L', 'M', 'M', 'J', 'V', 'S'].forEach(d => {
+          html += `<div style="text-align: center; font-size: 11px; font-weight: 700; color: var(--color-text-secondary); padding: 8px 0;">${d}</div>`;
+        });
+
+        // Jours vides
+        for (let i = 0; i < startDay; i++) {
+          html += '<div class="calendar-day" style="opacity: 0;"></div>';
+        }
+
+        // Jours du mois
+        for (let day = 1; day <= daysInMonth; day++) {
+          const date = new Date(now.getFullYear(), now.getMonth(), day);
+          const session = this.workoutHistory.find(s => {
+            const sDate = new Date(s.date);
+            return sDate.getDate() === day && sDate.getMonth() === now.getMonth() && sDate.getFullYear() === now.getFullYear();
+          });
+
+          let className = 'calendar-day';
+          if (session) {
+            className += session.completedSets / session.totalSets >= 0.9 ? ' completed' : ' partial';
+          }
+
+          html += `<div class="${className}">${day}</div>`;
+        }
+
+        html += '</div>';
+        document.getElementById('calendarDisplay').innerHTML = html;
+      }
+
+      renderRadarChart() {
+        const ctx = document.getElementById('radarChart');
+        if (!ctx) return;
+
+        if (this.charts.radar) this.charts.radar.destroy();
+
+        const labels = Object.keys(this.muscles);
+        const data = Object.values(this.muscles);
+
+        this.charts.radar = new Chart(ctx, {
+          type: 'radar',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: data,
+              backgroundColor: 'rgba(255, 140, 0, 0.3)',
+              borderColor: '#FF8C00',
+              borderWidth: 3,
+              pointBackgroundColor: '#FF8C00',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              pointRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              r: {
+                beginAtZero: true,
+                max: 30,
+                ticks: {
+                  color: '#98989D',
+                  backdropColor: 'transparent',
+                  font: { size: 10, weight: '600' }
+                },
+                grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                pointLabels: {
+                  color: '#FFFFFF',
+                  font: { size: 11, weight: '700' }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      renderDonutChart() {
+        const ctx = document.getElementById('donutChart');
+        if (!ctx) return;
+
+        if (this.charts.donut) this.charts.donut.destroy();
+
+        const labels = Object.keys(this.muscles);
+        const data = Object.values(this.muscles);
+        const colors = ['#FF8C00', '#FFA500', '#FFB733', '#FFC966', '#FFDB99', '#FF6B35', '#FF8353', '#FF9B71', '#FFB38F', '#FFCBAD', '#FF4500'];
+
+        this.charts.donut = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: data,
+              backgroundColor: colors,
+              borderColor: '#000000',
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: '#FFFFFF',
+                  font: { size: 11, weight: '600' },
+                  padding: 10,
+                  usePointStyle: true
+                }
+              }
+            }
+          }
+        });
+      }
+
+      renderMuscleVolume() {
+        let html = '<div style="display: flex; flex-direction: column; gap: 10px;">';
+        
+        Object.entries(this.muscles).forEach(([muscle, volume]) => {
+          const optimalMin = 10;
+          const optimalMax = 20;
+          const isOptimal = volume >= optimalMin && volume <= optimalMax;
+          const percentage = Math.min(100, (volume / optimalMax) * 100);
+
+          html += `
+            <div style="background: rgba(118, 118, 128, 0.12); border-radius: 14px; padding: 14px; border-left: 4px solid ${isOptimal ? '#30D158' : '#0A84FF'};">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <div style="font-weight: 700; font-size: 15px; color: ${isOptimal ? '#30D158' : '#0A84FF'};">
+                  ${isOptimal ? '✅' : '⚠️'} ${muscle}
+                </div>
+                <div style="font-weight: 800; font-size: 20px; color: ${isOptimal ? '#30D158' : '#0A84FF'};">
+                  ${volume}
+                </div>
+              </div>
+              <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px;">
+                Optimal: ${optimalMin}-${optimalMax} séries • ${isOptimal ? 'PARFAIT' : 'OK'}
+              </div>
+              <div style="background: rgba(255, 255, 255, 0.05); height: 5px; border-radius: 3px; overflow: hidden;">
+                <div style="background: ${isOptimal ? '#30D158' : '#0A84FF'}; height: 100%; width: ${percentage}%; transition: width 0.5s ease;"></div>
+              </div>
+            </div>
+          `;
+        });
+
+        html += '</div>';
+        document.getElementById('muscleVolumeList').innerHTML = html;
+      }
+
+      startWorkout() {
+        alert('🚀 Mode entraînement\n\nDémarrage de la séance...\n\nFonctionnalité complète en cours de développement!');
+      }
+
+      showHistory() {
+        const html = `
+          <div class="modal-overlay" onclick="if(event.target === this) this.remove()">
+            <div class="modal-content">
+              <div class="modal-close"></div>
+              <div class="modal-header">📊 Historique</div>
+              <div style="max-height: 60vh; overflow-y: auto;">
+                ${this.workoutHistory.slice().reverse().slice(0, 10).map(s => {
+                  const date = new Date(s.date).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' });
+                  const completion = Math.round((s.completedSets / s.totalSets) * 100);
+                  return `
+                    <div style="background: rgba(118, 118, 128, 0.12); border-radius: 16px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #30D158;">
+                      <div style="font-size: 17px; font-weight: 800; color: #30D158; margin-bottom: 6px;">${date}</div>
+                      <div style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px;">S${s.week} • ${s.day}</div>
+                      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                        <div>
+                          <div style="font-size: 22px; font-weight: 800; color: #0A84FF;">${s.duration}min</div>
+                          <div style="font-size: 11px; color: var(--color-text-secondary);">Durée</div>
+                        </div>
+                        <div>
+                          <div style="font-size: 22px; font-weight: 800; color: #30D158;">${s.completedSets}/${s.totalSets}</div>
+                          <div style="font-size: 11px; color: var(--color-text-secondary);">Séries</div>
+                        </div>
+                        <div>
+                          <div style="font-size: 22px; font-weight: 800; color: ${completion === 100 ? '#30D158' : '#0A84FF'};">${completion}%</div>
+                          <div style="font-size: 11px; color: var(--color-text-secondary);">Complet</div>
+                        </div>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+              <button class="btn" onclick="this.closest('.modal-overlay').remove()" style="margin-top: 16px;">
+                Fermer
+              </button>
+            </div>
+          </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', html);
+      }
+
+      showProgression() {
+        this.switchTab('stats');
+      }
+
+      exportData() {
+        if (confirm('💾 Exporter les données?\n\nTélécharger votre historique en JSON?')) {
+          const dataStr = JSON.stringify(this.workoutHistory, null, 2);
+          const blob = new Blob([dataStr], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `hybrid_master_51_${new Date().toISOString().split('T')[0]}.json`;
+          link.click();
+          URL.revokeObjectURL(url);
+        }
+      }
+
+      showSettings() {
+        const html = `
+          <div class="modal-overlay" onclick="if(event.target === this) this.remove()">
+            <div class="modal-content">
+              <div class="modal-close"></div>
+              <div class="modal-header">⚙️ Réglages</div>
+              <div style="display: flex; flex-direction: column; gap: 12px; margin: 20px 0;">
+                <button class="btn-secondary" style="padding: 16px; border-radius: 14px;" onclick="app.resetHistory(); this.closest('.modal-overlay').remove();">
+                  🗑️ Réinitialiser l'historique
+                </button>
+                <button class="btn-secondary" style="padding: 16px; border-radius: 14px;" onclick="app.exportData();">
+                  💾 Exporter les données
+                </button>
+                <button class="btn-secondary" style="padding: 16px; border-radius: 14px;" onclick="alert('ℹ️ HYBRID MASTER 51\\n\\nVersion: Ultimate Pro 10.0\\n\\n© 2025');">
+                  ℹ️ À propos
+                </button>
+              </div>
+              <button class="btn" onclick="this.closest('.modal-overlay').remove()">
+                Fermer
+              </button>
+            </div>
+          </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', html);
+      }
+
+      resetHistory() {
+        if (confirm('⚠️ Réinitialiser l\'historique?\n\nCette action est irréversible.')) {
+          localStorage.removeItem('hybrid_history');
+          this.workoutHistory = [];
+          alert('✅ Historique réinitialisé!');
+          this.renderCalendar();
+        }
+      }
+    }
+
+    // Initialisation
+    const app = new HybridMaster51();
+    window.app = app;
+
+    console.log('%c🏆 HYBRID MASTER 51 - ULTIMATE PRO', 'color: #30D158; font-size: 20px; font-weight: bold;');
+    console.log('%c✨ Style iOS 18 appliqué', 'color: #0A84FF; font-size: 14px;');
+  </script>
+</body>
+</html>
